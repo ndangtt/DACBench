@@ -4,9 +4,6 @@ from copy import deepcopy
 import logging
 from collections import deque
 
-import chainerrl
-import chainer
-
 import sys
 import os
 
@@ -342,7 +339,7 @@ class OneLLEnv(AbstractEnv):
         self.x = self.problem(n=self.instance.size, rng=self.rng)
 
         # total number of evaluations so far
-        self.total_evals = 1        
+        self.total_evals = 1                
 
         # reset histories (not all of those are used at the moment)        
         self.history_lbd = deque([-1]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH) # either this one or the next two (history_lbd1, history_lbd2) are used, depending on our configuration
@@ -350,7 +347,10 @@ class OneLLEnv(AbstractEnv):
         self.history_lbd2 = deque([-1]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH)
         self.history_p = deque([-1]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH)
         self.history_c = deque([-1]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH)
-        self.history_fx = deque([self.x.fitness]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH)        
+        self.history_fx = deque([self.x.fitness]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH) 
+
+        # for debug only
+        self.lbds = []       
         
         return self.get_state()
 
@@ -433,7 +433,8 @@ class OneLLEnv(AbstractEnv):
         done = (self.total_evals>=self.instance.max_evals) or (self.x.is_optimal())        
         
         # calculate reward        
-        reward = self.x.fitness - fitness_before_update - n_evals
+        #reward = self.x.fitness - fitness_before_update - n_evals
+        reward = (self.x.fitness - fitness_before_update)/n_evals
 
         # update histories
         self.history_fx.append(self.x.fitness)
@@ -442,13 +443,17 @@ class OneLLEnv(AbstractEnv):
         self.history_lbd.append(lbd1)
         self.history_p.append(p)
         self.history_c.append(c)
+
+        #print("%.2f" % (action), end='\n' if done else '\r')
+        print("steps:%5d\t evals:%5d\t lbd:%5d\t f:%5d" %(self.c_step, self.total_evals, lbd1, self.x.fitness), end='\r')
+        self.lbds.append(lbd1)
         
         if done:
             self.n_eps += 1
-            self.logger.info("Episode done: ep:%d, n:%d, obj:%d, evals:%d" % (self.n_eps, self.n, self.x.fitness, self.total_evals))            
+            self.logger.info("Episode done: ep:%d, n:%d, obj:%d, evals:%d, steps:%d, lbd: min=%d,max=%d, mean=%.1f" % (self.n_eps, self.n, self.x.fitness, self.total_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds)))                       
         
         return self.get_state(), reward, done, {}
-
+    
 
     def plot_agent_prediction(self, agent, dirname):
         """
