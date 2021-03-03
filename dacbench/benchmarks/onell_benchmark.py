@@ -10,7 +10,7 @@ class OneLLBenchmark(AbstractBenchmark):
     Benchmark with various settings for (1+(lbd, lbd))-GA
     """
 
-    def __init__(self, config_path=os.path.dirname(os.path.abspath(__file__)) + '/../additional_configs/onell/lbd_theory.json'):
+    def __init__(self, config_path=None, config=None):
         """
         Initialize OneLL benchmark
 
@@ -24,9 +24,13 @@ class OneLLBenchmark(AbstractBenchmark):
             all options specified in config_path will override the ones in config_name
 
         """
-        if config_path is None:
-            config_path = os.path.dirname(os.path.abspath(__file__)) + '/../additional_configs/onell/lbd_theory.json'
-        super(OneLLBenchmark, self).__init__(config_path)
+        if config_path is None:            
+            config_path = os.path.dirname(os.path.abspath(__file__)) + '/../additional_configs/onell/lbd_theory.json'        
+        super(OneLLBenchmark, self).__init__(config_path)        
+
+        if config:
+            for key, val in config.items():
+                self.config[key] = val        
 
         self.read_instance_set()                   
 
@@ -47,9 +51,10 @@ class OneLLBenchmark(AbstractBenchmark):
         """Read instance set from file"""
         path = (
             os.path.dirname(os.path.abspath(__file__))
-            + "/"
+            + "/../instance_sets/onell/"
             + self.config.instance_set_path
-        )
+        )        
+
         self.config["instance_set"] = pd.read_csv(path,index_col=0).to_dict('id')
 
         for key, val in self.config['instance_set'].items():
