@@ -46,7 +46,7 @@ onell_lbd_theory = objdict(
         "count_different_inds_only": True, # if True, only count an evaluation of a child if it is different from both of its parents
         "seed": 0,        
         "problem": "OneMax",
-        "instance_set_path": "../instance_sets/onell/onemax_2000.csv",
+        "instance_set_path": "onemax_2000.csv",
         "benchmark_info": INFO
     }
 )
