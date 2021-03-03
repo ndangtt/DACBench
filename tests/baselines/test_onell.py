@@ -33,8 +33,7 @@ def onell_dynamic_theory(n, problem=OneMax, seed=None,
     old_f_x = f_x
     while not x.is_optimal():
         # mutation phase        
-        lbd = np.sqrt(n / (n-f_x))
-        lbd = int(lbd)                
+        lbd = np.sqrt(n / (n-f_x))                        
         p = lbd/n
         xprime, f_xprime, ne1 = x.mutate(p, int(lbd), rng)               
 

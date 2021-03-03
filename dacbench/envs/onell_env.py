@@ -350,7 +350,9 @@ class OneLLEnv(AbstractEnv):
         self.history_fx = deque([self.x.fitness]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH) 
 
         # for debug only
-        self.lbds = []       
+        self.lbds = [] 
+        self.rewards = []     
+        self.init_obj = self.x.fitness 
         
         return self.get_state()
 
@@ -435,6 +437,7 @@ class OneLLEnv(AbstractEnv):
         # calculate reward        
         #reward = self.x.fitness - fitness_before_update - n_evals
         reward = (self.x.fitness - fitness_before_update)/n_evals
+        self.rewards.append(reward)
 
         # update histories
         self.history_fx.append(self.x.fitness)
@@ -445,12 +448,12 @@ class OneLLEnv(AbstractEnv):
         self.history_c.append(c)
 
         #print("%.2f" % (action), end='\n' if done else '\r')
-        print("steps:%5d\t evals:%5d\t lbd:%5d\t f:%5d" %(self.c_step, self.total_evals, lbd1, self.x.fitness), end='\r')
+        #print("steps:%5d\t evals:%5d\t lbd:%5d\t f:%5d" %(self.c_step, self.total_evals, lbd1, self.x.fitness), end='\r')
         self.lbds.append(lbd1)
         
         if done:
             self.n_eps += 1
-            self.logger.info("Episode done: ep:%d, n:%d, obj:%d, evals:%d, steps:%d, lbd: min=%d,max=%d, mean=%.1f" % (self.n_eps, self.n, self.x.fitness, self.total_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds)))                       
+            self.logger.info("Episode done: ep:%d, n:%d, obj:%d, init_obj:%d, evals:%d, steps:%d, lbd:min=%d,max=%d,mean=%.3f, R=%.1f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards)))                       
         
         return self.get_state(), reward, done, {}
     
