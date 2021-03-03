@@ -85,7 +85,10 @@ PPO_DEFAULT_CONFIG = OrderedDict({
 
 
 class PfrlPPO():
-    def __init__(self, make_env_func, max_steps,
+    def __init__(self, 
+                    make_env_func, 
+                    max_steps,
+                    bench_config=None,
                     config=None, logger=None, n_parallel=1,
                     seed = 0,
                     save_agent_interval=1000,                                           
@@ -131,9 +134,9 @@ class PfrlPPO():
         assert env_seeds.max() < 2 ** 32
 
         # create a batch of training and evaluation envs        
-        self.train_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=False, wrappers=self.train_env_wrappers)
+        self.train_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=False, wrappers=self.train_env_wrappers, bench_config=bench_config)
         if evaluate_during_train:
-            self.eval_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=True, wrappers=self.eval_env_wrappers)
+            self.eval_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=True, wrappers=self.eval_env_wrappers, bench_config=bench_config)
 
         
         # get info about env's state space and action space

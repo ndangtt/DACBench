@@ -20,11 +20,12 @@ def make_batch_env(make_env_func, n_envs=1,
                     seeds=None, test_env=False, 
                     wrappers=[
                         {'function':pfrl.wrappers.CastObservationToFloat32,'args':{}}
-                        ]):
+                        ],
+                    bench_config=None):
     if seeds is None:
         seeds = np.arange(n_envs)
     return pfrl.envs.MultiprocessVectorEnv(
-        [functools.partial(make_env_func, seed, test_env, wrappers) for seed in seeds]
+        [functools.partial(make_env_func, seed, test_env, wrappers, bench_config) for seed in seeds]
     )
 
     
