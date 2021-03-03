@@ -49,7 +49,8 @@ def run():
                     save_agent_interval = args.save_interval,
                     evaluate_during_train=args.eval,
                     eval_interval=args.eval_interval,
-                    eval_n_episodes=args.eval_n_episodes
+                    eval_n_episodes=args.eval_n_episodes,
+                    outdir=args.outdir
                     )
     ppo.run()
 
