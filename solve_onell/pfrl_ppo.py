@@ -42,6 +42,8 @@ import torch
 from torch import nn as nn
 import numpy as np
 from dacbench.benchmarks.onell_benchmark import OneLLBenchmark
+import glob
+import matplotlib.pyplot as plt
 
 PPO_DEFAULT_CONFIG = OrderedDict({        
     "normalize_obs": True, # standardise observations based on their running empirical mean and variance 
@@ -108,6 +110,8 @@ class PfrlPPO():
                 self.config[key] = val
         config = self.config
 
+        self.n_parallel = n_parallel
+
         # create output dir
         os.makedirs(outdir, exist_ok=True)
 
@@ -134,9 +138,14 @@ class PfrlPPO():
         assert env_seeds.max() < 2 ** 32
 
         # create a batch of training and evaluation envs        
-        self.train_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=False, wrappers=self.train_env_wrappers, bench_config=bench_config)
-        if evaluate_during_train:
-            self.eval_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=True, wrappers=self.eval_env_wrappers, bench_config=bench_config)
+        if self.n_parallel>1:
+            self.train_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=False, wrappers=self.train_env_wrappers, bench_config=bench_config)
+            if evaluate_during_train:
+                self.eval_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=True, wrappers=self.eval_env_wrappers, bench_config=bench_config)
+        else:
+            self.train_env = make_env_func(seed=seed, test=False, wrappers=self.train_env_wrappers, bench_config=bench_config)
+            if evaluate_during_train:
+                self.eval_env = make_env_func(seed=seed, test=True, wrappers=self.train_env_wrappers, bench_config=bench_config)
 
         
         # get info about env's state space and action space
@@ -254,29 +263,97 @@ class PfrlPPO():
         with open(outdir + '/exp_config.json', 'wt') as f:
             json.dump(self.exp_config, f, indent=2) 
 
-    def run(self):
+    def train(self):
         config = self.exp_config
-        if self.exp_config.evaluate_during_train:
-            pfrl.experiments.train_agent_batch_with_evaluation(
-                agent=self.agent,
-                env=self.train_envs, 
-                steps=config.max_steps,
-                checkpoint_freq=config.save_agent_interval,    
-                eval_env=self.eval_envs, 
-                eval_n_steps=None,
-                eval_n_episodes=config.eval_n_episodes,
-                eval_interval=config.eval_interval,
-                outdir=config.outdir,
-                step_hooks=self.step_hooks,
-                logger=self.logger                
-            )
+        if self.n_parallel > 1:
+            if self.exp_config.evaluate_during_train:
+                pfrl.experiments.train_agent_batch_with_evaluation(
+                    agent=self.agent,
+                    env=self.train_envs, 
+                    steps=config.max_steps,
+                    checkpoint_freq=config.save_agent_interval,    
+                    eval_env=self.eval_envs, 
+                    eval_n_steps=None,
+                    eval_n_episodes=config.eval_n_episodes,
+                    eval_interval=config.eval_interval,
+                    outdir=config.outdir,
+                    step_hooks=self.step_hooks,
+                    logger=self.logger                
+                )
+            else:
+                pfrl.experiments.train_agent_batch(
+                    agent=self.agent,
+                    env=self.train_envs, 
+                    steps=config.max_steps,
+                    checkpoint_freq=config.save_agent_interval,                    
+                    outdir=config.outdir,
+                    step_hooks=self.step_hooks,
+                    logger=self.logger            
+                )
         else:
-            pfrl.experiments.train_agent_batch(
-                agent=self.agent,
-                env=self.train_envs, 
-                steps=config.max_steps,
-                checkpoint_freq=config.save_agent_interval,                    
-                outdir=config.outdir,
-                step_hooks=self.step_hooks,
-                logger=self.logger            
-            )
+            if self.exp_config.evaluate_during_train:
+                pfrl.experiments.train_agent_with_evaluation(
+                    agent=self.agent,
+                    env=self.train_env, 
+                    steps=config.max_steps,
+                    checkpoint_freq=config.save_agent_interval,    
+                    eval_env=self.eval_envs, 
+                    eval_n_steps=None,
+                    eval_n_episodes=config.eval_n_episodes,
+                    eval_interval=config.eval_interval,
+                    outdir=config.outdir,
+                    step_hooks=self.step_hooks,
+                    logger=self.logger                
+                )
+            else:
+                pfrl.experiments.train_agent(
+                    agent=self.agent,
+                    env=self.train_env, 
+                    steps=config.max_steps,
+                    checkpoint_freq=config.save_agent_interval,                    
+                    outdir=config.outdir,
+                    step_hooks=self.step_hooks,
+                    logger=self.logger            
+                )
+
+
+    def load_and_eval(self, model_path, eval_n_episodes):
+        self.agent.load(model_path)
+        if self.n_parallel>1:
+            env = self.eval_envs
+        else:
+            env = self.eval_env
+        pfrl.experiments.eval_performance(env=env, 
+                                            agent=self.agent,
+                                            n_episodes=eval_n_episodes,
+                                            n_steps=None)
+
+    def load_and_plot(self, model_dir):
+        agent = self.agent
+        env = self.eval_env
+
+        dirs = glob.glob(model_dir + "/*")
+        for d in dirs:
+            if os.path.isdir(d) is False:
+                continue
+            
+            agent.load(d)                        
+            for instance in env.instance_set.values(): 
+                # plot 1: f(x) as x-axis, optimal and predicted lbd values as y-axis                
+                n = instance.size
+                obss = torch.Tensor(np.asarray([[n,i] for i in range(n)], dtype=np.float32))
+                if agent.obs_normalizer:
+                    obss = agent.obs_normalizer(obss, update=False)
+                    with torch.no_grad():
+                        predictions = agent.model(obss)[0].base_dist
+                        means = [np.clip(i.tolist()[0],1,n) for i in predictions.loc]
+                        vars = [np.clip(i.tolist()[0],1,n) for i in predictions.scale]                        
+                    x = np.arange(n)
+                    plt.clf()
+                    plt.plot(x, means, color='black', linewidth=5)                    
+                    plt.fill_between(x,[means[i]-vars[i] for i in range(n)],
+                                        [means[i]+vars[i] for i in range(n)],alpha=0.2,
+                                        color='C0')
+                    plt.savefig(d + '-' + str(n) + '.png')
+
+

@@ -24,14 +24,21 @@ def run():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--outdir", default='output')
-    parser.add_argument("--cores", default=1)
-    parser.add_argument("--max_steps", default=10000)
-    parser.add_argument("--save_interval", default=5000)
-    parser.add_argument("--eval",default=True)
-    parser.add_argument("--eval_interval",default=5000)
-    parser.add_argument("--eval_n_episodes",default=5)
+    parser.add_argument("--cores", default=1, type=int)
+    parser.add_argument("--max_steps", default=10000, type=int)
+    parser.add_argument("--save_interval", default=5000, type=int)
+    parser.add_argument("--eval",default=True, type=int)
+    parser.add_argument("--eval_interval",default=5000, type=int)
+    parser.add_argument("--eval_n_episodes",default=5, type=int)
     parser.add_argument("--instance_set", default=None)
+    parser.add_argument("--load_and_eval", default=None, help='path to a pre-trained agent')    
+    parser.add_argument("--load_and_plot", default=None, help='path to a directory of pre-trained models')       
     args = parser.parse_args()
+
+    if args.load_and_eval:
+        assert args.eval, "to load a pre-trained model and evaluate it, set --eval True"
+    elif args.load_and_plot:
+        assert args.eval and (args.cores==1), "to load a pre-trained model and plot it, set --eval True and --cores 1"
 
     config = {
         'var_init': 1
@@ -52,7 +59,17 @@ def run():
                     eval_n_episodes=args.eval_n_episodes,
                     outdir=args.outdir
                     )
-    ppo.run()
+    
+    if args.load_and_eval:
+        ppo.load_and_eval(args.load, args.eval_n_episodes)
+
+    elif args.load_and_plot:
+        ppo.load_and_plot(args.load_and_plot)
+
+    else:
+        ppo.train()
+        
+
 
 def test():
     env = make_onell_env(0,False)
