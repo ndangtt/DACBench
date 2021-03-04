@@ -3,6 +3,8 @@ from dacbench.benchmarks.onell_benchmark import OneLLBenchmark
 import pfrl
 import logging
 import argparse
+import json
+import os
 
 def make_onell_env(seed, test, wrappers=[], bench_config=None):
     # use a different seed if this is a test environment
@@ -18,6 +20,33 @@ def make_onell_env(seed, test, wrappers=[], bench_config=None):
         env = wrapper['function'](env, **wrapper['args'])
     return env
 
+def read_agent_config(config):
+    agent_config = None
+    if config is not None:
+        if os.path.isfile(config):  # agent config as json file
+            with open(config, 'rt') as f:
+                agent_config = json.load(f)
+        else:  # agent config as string ("param1=val1,param2=val2,...")
+            ls = [s.strip() for s in config.split(',')]
+            agent_config = {}
+            for s in ls:
+                param = s.split('=')[0]
+                val = s.split('=')[1]
+                try:
+                    val = int(val)
+                except:
+                    try:
+                        val = float(val)
+                    except:
+                        if val=='True':
+                            val = True
+                        elif val=='False':
+                            val = False
+                        pass
+                agent_config[param] = val
+    return agent_config
+
+
 def run():
     log_format = '%(asctime)-15s: %(message)s'
     logging.basicConfig(level=logging.DEBUG, format=log_format)   
@@ -31,6 +60,7 @@ def run():
     parser.add_argument("--eval_interval",default=5000, type=int)
     parser.add_argument("--eval_n_episodes",default=5, type=int)
     parser.add_argument("--instance_set", default=None)
+    parser.add_argument("--agent_config",default=None)
     parser.add_argument("--load_and_eval", default=None, help='path to a pre-trained agent')    
     parser.add_argument("--load_and_plot", default=None, help='path to a directory of pre-trained models')       
     args = parser.parse_args()
@@ -40,9 +70,7 @@ def run():
     elif args.load_and_plot:
         assert args.eval and (args.cores==1), "to load a pre-trained model and plot it, set --eval True and --cores 1"
 
-    config = {
-        'var_init': 1
-    } 
+    config = read_agent_config(args.agent_config) 
     bench_config = None
     if args.instance_set:
         bench_config = {}

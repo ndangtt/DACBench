@@ -297,7 +297,7 @@ class PfrlPPO():
                     env=self.train_env, 
                     steps=config.max_steps,
                     checkpoint_freq=config.save_agent_interval,    
-                    eval_env=self.eval_envs, 
+                    eval_env=self.eval_env, 
                     eval_n_steps=None,
                     eval_n_episodes=config.eval_n_episodes,
                     eval_interval=config.eval_interval,
