@@ -301,7 +301,7 @@ class OneLLEnv(AbstractEnv):
             else:
                 raise Exception("Error: invalid state variable name: " + var_name)
         
-        # names of all variables in an action
+        # names of all variables in an action        
         self.action_description = config.action_description
         self.action_var_names = [s.strip() for s in config.action_description.split(',')] # names of 
         for name in self.action_var_names:
@@ -453,7 +453,11 @@ class OneLLEnv(AbstractEnv):
         
         if done:
             self.n_eps += 1
-            self.logger.info("Episode done: ep:%d; n:%d; obj:%d; init_obj:%d; evals:%d; steps:%d; lbd:min=%d,max=%d,mean=%.3f; R=%.1f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards)))                       
+            if hasattr(self, "env_type"):
+                msg = "Env " + self.env_type + ". "
+            else:
+                msg = ""            
+            self.logger.info(msg + "Episode done: ep=%d; n=%d; obj=%d; init_obj=%d; evals=%d; steps=%d; lbd_min=%d; lbd_max=%d; lbd_mean=%.3f; R=%.1f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards)))                       
         
         return self.get_state(), reward, done, {}
     

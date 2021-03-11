@@ -48,12 +48,16 @@ class OneLLBenchmark(AbstractBenchmark):
 
     
     def read_instance_set(self):
-        """Read instance set from file"""
-        path = (
-            os.path.dirname(os.path.abspath(__file__))
-            + "/../instance_sets/onell/"
-            + self.config.instance_set_path
-        )        
+        """Read instance set from file"""        
+        assert self.config.instance_set_path        
+        if os.path.isfile(self.config.instance_set_path):
+            path = self.config.instance_set_path
+        else:        
+            path = (
+                os.path.dirname(os.path.abspath(__file__))
+                + "/../instance_sets/onell/"
+                + self.config.instance_set_path + ".csv"
+            )                
 
         self.config["instance_set"] = pd.read_csv(path,index_col=0).to_dict('id')
 

@@ -97,7 +97,8 @@ class PfrlPPO():
                     evaluate_during_train=False, 
                     eval_interval=1000, 
                     eval_n_episodes=5,                                        
-                    outdir='./output'):                            
+                    outdir='./output',
+                    save_configs=True):                            
         assert max_steps>0        
 
         # set logger
@@ -112,12 +113,16 @@ class PfrlPPO():
 
         self.n_parallel = n_parallel
 
-        # create output dir
-        os.makedirs(outdir, exist_ok=True)
-
-        # save config to output dir
-        with open(outdir + '/config.json', 'wt') as f:
-            json.dump(self.config, f, indent=2)   
+        if save_configs:
+            # create output dir
+            os.makedirs(outdir, exist_ok=True)
+            # save RL config to output dir        
+            with open(outdir + '/config.json', 'wt') as f:
+                    json.dump(self.config, f, indent=2)   
+            # save benchmark config to output dir
+            if bench_config:
+                with open(outdir + "/bench_config.json", 'wt') as f:
+                    json.dump(bench_config, f, indent=2)
 
         # make sure env observation space is converted to float32 (required by pfrl)
         float32_wrapper = {'function':pfrl.wrappers.CastObservationToFloat32,'args':{}}
@@ -150,7 +155,7 @@ class PfrlPPO():
         
         # get info about env's state space and action space
         # (used for setting up the agent)
-        env = make_env_func(test=False, seed=0)
+        env = make_env_func(test=False, seed=0, bench_config=bench_config)
         obs_space = env.observation_space
         obs_size = obs_space.low.size
         act_space = env.action_space                
@@ -257,11 +262,12 @@ class PfrlPPO():
                         policy_loss_stats_window=config.policy_loss_stats_window)
 
         # save experiment config
-        self.exp_config = objdict()
-        for name in ['max_steps','n_parallel','seed','save_agent_interval','evaluate_during_train','eval_interval','eval_n_episodes','outdir']:
-            self.exp_config[name] = locals()[name]        
-        with open(outdir + '/exp_config.json', 'wt') as f:
-            json.dump(self.exp_config, f, indent=2) 
+        if save_configs:
+            self.exp_config = objdict()
+            for name in ['max_steps','n_parallel','seed','save_agent_interval','evaluate_during_train','eval_interval','eval_n_episodes','outdir']:
+                self.exp_config[name] = locals()[name]        
+            with open(outdir + '/exp_config.json', 'wt') as f:
+                json.dump(self.exp_config, f, indent=2) 
 
     def train(self):
         config = self.exp_config
@@ -277,8 +283,7 @@ class PfrlPPO():
                     eval_n_episodes=config.eval_n_episodes,
                     eval_interval=config.eval_interval,
                     outdir=config.outdir,
-                    step_hooks=self.step_hooks,
-                    logger=self.logger                
+                    step_hooks=self.step_hooks       
                 )
             else:
                 pfrl.experiments.train_agent_batch(
@@ -287,8 +292,7 @@ class PfrlPPO():
                     steps=config.max_steps,
                     checkpoint_freq=config.save_agent_interval,                    
                     outdir=config.outdir,
-                    step_hooks=self.step_hooks,
-                    logger=self.logger            
+                    step_hooks=self.step_hooks    
                 )
         else:
             if self.exp_config.evaluate_during_train:
@@ -302,8 +306,7 @@ class PfrlPPO():
                     eval_n_episodes=config.eval_n_episodes,
                     eval_interval=config.eval_interval,
                     outdir=config.outdir,
-                    step_hooks=self.step_hooks,
-                    logger=self.logger                
+                    step_hooks=self.step_hooks                               
                 )
             else:
                 pfrl.experiments.train_agent(
@@ -312,8 +315,7 @@ class PfrlPPO():
                     steps=config.max_steps,
                     checkpoint_freq=config.save_agent_interval,                    
                     outdir=config.outdir,
-                    step_hooks=self.step_hooks,
-                    logger=self.logger            
+                    step_hooks=self.step_hooks                                
                 )
 
 

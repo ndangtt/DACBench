@@ -23,7 +23,7 @@ Setting 1a:
       The optimal policy for OneMax is lambda = sqrt(n / (n-f(x))), where:
           n is problem size
           f(x) is current objective value
-  State space: n (int), f(x) (int)
+  State space: n (int), f(x) (float)
   Action space: lbd (int)
 """
 onell_lbd_theory = objdict(
@@ -33,7 +33,7 @@ onell_lbd_theory = objdict(
         "action_space_args": [np.array([1]), np.array([np.inf])],
         "action_description": "lbd",
         "observation_space_class": "Box", 
-        "observation_space_type": np.int32,       
+        "observation_space_type": np.float32,       
         "observation_space_args": [     
             np.array([1, 0]),
             np.array([np.inf, np.inf])   
@@ -41,12 +41,12 @@ onell_lbd_theory = objdict(
         "observation_description": "n, f(x)",
         "reward_range": [-np.inf, np.inf],   # the true reward range is instance dependent
         "cutoff": 1e9,  # we don't really use this, 
-                        # the real cutoff is in instance_set_path and is instance dependent
+                        # the real cutoff is in instance_set and is instance dependent
         "include_xprime": True, # if True, xprime is included in the selection after crossover phase
         "count_different_inds_only": True, # if True, only count an evaluation of a child if it is different from both of its parents
         "seed": 0,        
         "problem": "OneMax",
-        "instance_set_path": "onemax_2000.csv",
+        "instance_set_path": "onemax_2000",
         "benchmark_info": INFO
     }
 )
