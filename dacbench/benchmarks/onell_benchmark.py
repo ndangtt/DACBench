@@ -1,5 +1,5 @@
 from dacbench.abstract_benchmark import AbstractBenchmark, objdict
-from dacbench.envs.onell_env import OneLLEnv
+from dacbench.envs.onell_env import OneLLEnv, RLSEnv
 
 import numpy as np
 import os
@@ -39,8 +39,12 @@ class OneLLBenchmark(AbstractBenchmark):
         """
         Return an environment with current configuration        
         """        
-
-        env = OneLLEnv(self.config)
+        assert self.config.algorithm in ['onell','rls']
+        
+        if self.config.algorithm == "onell":
+            env = OneLLEnv(self.config)
+        else:
+            env = RLSEnv(self.config)
         for func in self.wrap_funcs:
             env = func(env)
 

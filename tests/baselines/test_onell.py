@@ -126,6 +126,40 @@ def onell_dynamic_5params(n, problem=OneMax, seed=None,
         
     return x, f_x, total_evals
 
+def rls_optimal_lo(n, problem=LeadingOne, seed=None, max_evals = 99999999):
+    """
+        RLS with optimal step size (k=int(n/f(x) + 1)) for Leading One problem
+        Reference: https://dl.acm.org/doi/10.1145/3205455.3205560 (Lemma 1)
+    """
+    rng = get_default_rng(seed)
+
+    x = LeadingOne(n, rng=rng)   
+    f_x = x.fitness
+    
+    total_evals = 1 # total number of solution evaluations    
+        
+    old_f_x = f_x
+    total_evals = 0
+    while not x.is_optimal():
+        k = int(n / (f_x + 1))        
+        y, f_y = x.mutate_rls(k, rng)
+        total_evals += 1                           
+
+        # selection phase
+        old_f_x = f_x
+        if f_x <= f_y:
+            x = y
+            f_x = f_y       
+
+        #print("%d: evals=%d; obj=%d; k=%d" % (total_evals, total_evals, f_x, k))
+            
+        if total_evals>=max_evals:
+            break  
+
+    #print(total_evals)
+        
+    return x, f_x, total_evals
+
 class TestOneLLBaselines(unittest.TestCase):
 
     def test_dyn_theory(self):
@@ -194,5 +228,6 @@ class TestOneLLBaselines(unittest.TestCase):
         ratio = (sum_evals_RL / n_runs) / (sum_evals_non_RL / n_runs)
         assert ratio>=0.9 and ratio<=1.1
     
+
 #TestOneLLBaselines().test_dyn_theory()
 #TestOneLLBaselines().test_dyn_onefifth()

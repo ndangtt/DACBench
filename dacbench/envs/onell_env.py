@@ -35,7 +35,7 @@ class BinaryProblem:
         pass        
 
 
-    def get_fitness_change_after_mutation(self, locs):
+    def get_fitness_after_flipping(self, locs):
         """
         Calculate the change in fitness after flipping the bits at positions locs
 
@@ -46,14 +46,13 @@ class BinaryProblem:
 
         Returns: int
         -----------
-            objective after mutation - objective before mutation
+            objective after flipping
         """
         raise NotImplementedError
 
-
     def get_fitness_after_crossover(self, xprime, locs_x, locs_xprime):
         """
-        Calculate fitness of the child when crossover with xprime, without doing the actual crossover
+        Calculate fitness of the child aftering being crossovered with xprime
 
         Parameters
         -----------
@@ -64,31 +63,54 @@ class BinaryProblem:
             locs_xprime: : 1d boolean/integer array
                 positions where we change to xprime's bits
 
-        Returns: int
-        -----------
-            fitness of the new individual after crossover
-
+        Returns: fitness of the new individual after crossover
+        -----------            
         """
         raise NotImplementedError
 
-
-    def mutate(self, p, n_offsprings, rng=np.random.default_rng()):
+    def flip(self, locs):
         """
-        Draw l ~ binomial(n, p), l>0
-        Generate n_offsprings children by flipping exactly l bits and select the best one
+        flip the bits at position indicated by locs
 
         Parameters
         -----------
-            p: float
-                mutation probability, in range of [0,1]
-            n_offsprings: int
-                number of mutated children
+            locs: 1d-array
+                positions where bits are flipped
 
-        Returns
-        ----------- 
-            the best child (maximum fitness), its fitness and number of evaluations used        
+        Returns: the new individual after the flip
         """
+        child = deepcopy(self)
+        child.data[locs] = ~child.data[locs]
+        child.eval()
+        return child
 
+    def combine(self, xprime, locs_xprime):
+        """
+        combine (crossover) self and xprime by taking xprime's bits at locs_xprime and self's bits at other positions
+
+        Parameters
+        -----------
+            xprime: 1d boolean array
+                the individual to crossover with
+            locs_x: 1d boolean/integer array
+                positions where we keep current bits of self
+            locs_xprime: : 1d boolean/integer array
+                positions where we change to xprime's bits
+
+        Returns: the new individual after the crossover        
+
+        """
+        child = deepcopy(self)
+        child.data[locs_xprime] = xprime.data[locs_xprime]
+        child.eval()
+        return child
+
+    def mutate(self, p, n_childs, rng=np.random.default_rng()):
+        """
+        Draw l ~ binomial(n, p), l>0
+        Generate n_childs children by flipping exactly l bits
+        Return: the best child (maximum fitness), its fitness and number of evaluations used        
+        """
         assert p>=0
 
         if p==0:
@@ -98,45 +120,43 @@ class BinaryProblem:
         while l==0:
             l = rng.binomial(self.n, p)                
         
-        best_delta = -self.n
+        best_obj = -1
         best_locs = None
-        for i in range(n_offsprings):
+        for i in range(n_childs):
             locs = rng.choice(self.n, size=l, replace=False)        
-            delta = self.get_fitness_change_after_mutation(locs)
-            if delta > best_delta:
+            obj = self.get_fitness_after_flipping(locs)
+            if obj > best_obj:
                 best_locs = locs
-                best_delta = delta                       
+                best_obj = obj                       
 
-        best_child = deepcopy(self)
-        best_child.data[best_locs] = ~best_child.data[best_locs]
-        best_child.fitness = self.fitness + best_delta
+        best_child = self.flip(best_locs)                
 
-        return best_child, best_child.fitness, n_offsprings
+        return best_child, best_child.fitness, n_childs
 
+    def mutate_rls(self, l, rng=np.random.default_rng()):
+        """
+        generate a child by flipping exactly l bits
+        Return: child, its fitness        
+        """
+        assert l>=0
 
-    def crossover(self, xprime, p, n_offsprings, 
+        if l==0:
+            return self, self.fitness, 0
+
+        locs = rng.choice(self.n, size=l, replace=False) 
+        child = self.flip(locs)
+
+        return child, child.fitness       
+
+    def crossover(self, xprime, p, n_childs, 
                     include_xprime=True, count_different_inds_only=True,
                     rng=np.random.default_rng()):
         """
-        Generate n_offsprings children using crossover on self and xprime, and return the best one
-            Crossover operator: for each bit, taking value from xprime with probability p and from self with probability 1-p
-
-        Parameters
-        ---------
-            xprime: 1d boolean numpy array
-                the individual to crossover with
-            p: float
-                crossover bias, in range of [0,1]
-            include_xprime: boolean
-                if True, include xprime in the selection for the best individual after all crossovers
-            count_different_inds_only: boolean
-                if True, only count an evaluation of a child if it is different from both of its parents (self and xprime)
-            rng: numpy random generator   
-
-        Returns
-        ---------  
-            the best child (maximum fitness), its fitness and number of evaluations used 
-
+        Crossover operator:
+            for each bit, taking value from x with probability p and from self with probability 1-p
+        Arguments:
+            x: the individual to crossover with
+            p (float): in [0,1]                                                
         """
         assert p <= 1
         
@@ -147,40 +167,38 @@ class BinaryProblem:
                 return self, self.fitness, 0            
 
         if include_xprime:
-            best_val = xprime.fitness
+            best_obj = xprime.fitness
         else:
-            best_val = -1            
+            best_obj = -1            
         best_locs = None
 
         n_evals = 0
-        ls = rng.binomial(self.n, p, size=n_offsprings)
-        locs_x = np.empty(self.n, dtype=np.bool)        
+        ls = rng.binomial(self.n, p, size=n_childs)        
         for l in ls:                   
             locs_xprime = rng.choice(self.n, l, replace=False)
-            locs_x.fill(True)            
+            locs_x = np.full(self.n, True)
             locs_x[locs_xprime] = False
-            val = self.get_fitness_after_crossover(xprime, locs_x, locs_xprime)            
-
-            if (val != self.fitness) and (val!=xprime.fitness):
+            obj = self.get_fitness_after_crossover(xprime, locs_x, locs_xprime) 
+                   
+            if (obj != self.fitness) and (obj!=xprime.fitness):
                 n_evals += 1
             elif (not np.array_equal(xprime.data[locs_xprime], self.data[locs_xprime])) and (not np.array_equal(self.data[locs_x], xprime.data[locs_x])):            
                 n_evals += 1            
 
-            if val > best_val:
-                best_val = val
+            if obj > best_obj:
+                best_obj = obj
                 best_locs = locs_xprime
-                        
+            
+            
         if best_locs is not None:
-            child = deepcopy(self)
-            child.data[best_locs] = xprime.data[best_locs]
-            child.fitness = best_val
+            child = self.combine(xprime, best_locs)
         else:
             child = xprime
 
         if not count_different_inds_only:
-            n_evals = n_offsprings
+            n_evals = n_childs
 
-        return child, best_val, n_evals
+        return child, child.fitness, n_evals
 
 
 class OneMax(BinaryProblem):
@@ -199,9 +217,9 @@ class OneMax(BinaryProblem):
     def get_optimal(self):
         return self.n
 
-    def get_fitness_change_after_mutation(self, locs):        
+    def get_fitness_after_flipping(self, locs):        
         # f(x_new) = f(x) + l - 2 * sum_of_flipped_block
-        return len(locs) - 2 * self.data[locs].sum()
+        return self.fitness + len(locs) - 2 * self.data[locs].sum()
 
     def get_fitness_after_crossover(self, xprime, locs_x, locs_xprime):        
         return self.data[locs_x].sum() + xprime.data[locs_xprime].sum()
@@ -225,31 +243,28 @@ class LeadingOne(BinaryProblem):
         return self.data.all()  
 
     def get_optimal(self):
-        return self.n
+        return self.n    
 
-    def get_fitness_change_after_mutation(self, locs):        
+    def get_fitness_after_flipping(self, locs):        
         min_loc = locs.min()
         if min_loc < self.fitness:
-            return min_loc - self.fitness
+            return min_loc
         elif min_loc > self.fitness:
-            return 0
+            return self.fitness
         else:
             old_fitness = self.fitness
             self.data[locs] = ~self.data[locs]
-            new_fitness = self.eval()
-            delta_fitness = new_fitness - old_fitness
+            new_fitness = self.eval()            
             self.data[locs] = ~self.data[locs]
             self.fitness = old_fitness
-            return delta_fitness
+            return new_fitness
 
-    def get_fitness_after_crossover(self, xprime, locs_x, locs_xprime):        
-        """
-        this implementation should be improved
-        """
-        child = deepcopy(self)
-        child.data[locs_xprime] = xprime.data[locs_xprime]
+
+    def get_fitness_after_crossover(self, xprime, locs_x, locs_xprime):
+        child = self.combine(xprime, locs_xprime)                
         child.eval()
         return child.fitness
+        
 
 HISTORY_LENGTH = 5
 
@@ -459,26 +474,7 @@ class OneLLEnv(AbstractEnv):
                 msg = ""            
             self.logger.info(msg + "Episode done: ep=%d; n=%d; obj=%d; init_obj=%d; evals=%d; steps=%d; lbd_min=%d; lbd_max=%d; lbd_mean=%.3f; R=%.1f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards)))                       
         
-        return self.get_state(), reward, done, {}
-    
-
-    def plot_agent_prediction(self, agent, dirname):
-        """
-        Plot agent progress for this particular environment
-        """
-
-        # plot 1: f(x) as x-axis, optimal and predicted lbd values as y-axis
-        agent.load(dirname)
-        obss = np.asarray([[self.n,i] for i in range(self.n)], dtype=np.float32)
-        b_state = chainerrl.misc.batch_states(obss, agent.xp, agent.phi)
-
-        if agent.obs_normalizer:
-            b_state = agent.obs_normalizer(b_state, update=False)
-
-        with chainer.using_config('train', False), chainer.no_backprop_mode():        
-            action_distrib, values = agent.model(b_state)                                
-
-        print(action_distrib['mean'].array)
+        return self.get_state(), reward, done, {}    
             
 
     def close(self) -> bool:
@@ -495,4 +491,136 @@ class OneLLEnv(AbstractEnv):
         return True
 
 
+class RLSEnv(AbstractEnv):
+    """
+    Environment for RLS with step size
+    for both OneMax and LeadingOne problems
+    """
 
+    def __init__(self, config) -> None:
+        """
+        Initialize RLSEnv
+
+        Parameters
+        -------
+        config : objdict
+            Environment configuration
+        """
+        super(RLSEnv, self).__init__(config)        
+        self.logger = logging.getLogger(self.__str__())     
+
+        self.name = config.name   
+        
+        # parameters of RLS
+        self.problem = globals()[config.problem]                
+
+        # the random generator used by RLS
+        if 'seed' in config:
+            seed = config.seed
+        else:
+            seed = None
+        self.rng = np.random.default_rng(seed)   
+
+        # for logging
+        self.n_eps = 0 # number of episodes done so far        
+             
+
+    def reset(self):
+        """
+        Resets env
+
+        Returns
+        -------
+        numpy.array
+            Environment state
+        """        
+        super(RLSEnv, self).reset_()        
+
+        # current problem size (n) & evaluation limit (max_evals)
+        self.n = self.instance.size
+        self.max_evals = self.instance.max_evals
+        self.logger.info("n:%d, max_evals:%d" % (self.n, self.max_evals))
+
+        # create an initial solution
+        self.x = self.problem(n=self.instance.size, rng=self.rng)
+
+        # total number of evaluations so far
+        self.total_evals = 1                        
+
+        # for debug only
+        self.ks = [] 
+        self.rewards = []     
+        self.init_obj = self.x.fitness 
+        
+        return self.get_state()
+
+
+    def get_state(self):
+        return np.asarray([self.n, self.x.fitness])
+    
+    def step(self, action):
+        """
+        Execute environment step
+
+        Parameters
+        ----------
+        action : Box
+            action to execute
+
+        Returns
+        -------            
+            state, reward, done, info
+            np.array, float, bool, dict
+        """
+        super(RLSEnv, self).step_()     
+
+        k = int(action[0])           
+                
+        # for logging
+        fitness_before_update = self.x.fitness
+        
+        # flip k bits
+        y, f_y, n_evals = self.x.mutate_rls(k, self.rng)         
+        
+        # update x
+        if self.x.fitness <= y.fitness:
+            self.x = y
+        
+        # update total number of evaluations        
+        self.total_evals += n_evals
+
+        # check stopping criteria        
+        done = (self.total_evals>=self.instance.max_evals) or (self.x.is_optimal())        
+        
+        # calculate reward        
+        #reward = self.x.fitness - fitness_before_update - n_evals
+        reward = (self.x.fitness - fitness_before_update)/n_evals
+        self.rewards.append(reward)
+
+        #print("%.2f" % (action), end='\n' if done else '\r')
+        #print("steps:%5d\t evals:%5d\t lbd:%5d\t f:%5d" %(self.c_step, self.total_evals, lbd1, self.x.fitness), end='\r')
+        self.ks.append(k)
+        
+        if done:
+            self.n_eps += 1
+            if hasattr(self, "env_type"):
+                msg = "Env " + self.env_type + ". "
+            else:
+                msg = ""            
+            self.logger.info(msg + "Episode done: ep=%d; n=%d; obj=%d; init_obj=%d; evals=%d; steps=%d; k_min=%d; k_max=%d; k_mean=%.3f; R=%.1f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.c_step, min(self.ks), max(self.lbksds), sum(self.ks)/len(self.ks), sum(self.rewards)))                       
+        
+        return self.get_state(), reward, done, {}    
+            
+
+    def close(self) -> bool:
+        """
+        Close Env
+
+        No additional cleanup necessary
+
+        Returns
+        -------
+        bool
+            Closing confirmation
+        """        
+        return True

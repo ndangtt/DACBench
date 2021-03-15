@@ -16,19 +16,24 @@ INFO = {
 }
 
 """
-Setting 1a: 
-  Name: lbd_theory
-  Description: 
-      The simplest setting where we only tune lbd and assume that p=lambda/n and c=1/lambda
-      The optimal policy for OneMax is lambda = sqrt(n / (n-f(x))), where:
-          n is problem size
-          f(x) is current objective value
-  State space: n (int), f(x) (float)
-  Action space: lbd (int)
+***************************************
+*            OneLL for ONEMAX         *
+***************************************
 """
+
+# Setting 1a: 
+#   Name: lbd_theory
+#   Description: 
+#       The simplest setting where we only tune lbd and assume that p=lambda/n and c=1/lambda
+#       The optimal policy for OneMax is lambda = sqrt(n / (n-f(x))), where:
+#           n is problem size
+#           f(x) is current objective value
+#   State space: n (int), f(x) (float)
+#   Action space: lbd (int)
 onell_lbd_theory = objdict(
     {
         "name": "lbd_theory",
+        "algorithm": "onell",
         "action_space_class": "Box",
         "action_space_args": [np.array([1]), np.array([np.inf])],
         "action_description": "lbd",
@@ -90,6 +95,44 @@ onell_lbd1_lbd2_p_c["observation_space_args"] = [np.array([1, 0, 0, 1, 1, 0, 0])
 onell_lbd1_lbd2_p_c["action_space_args"] = [np.array([1, 1, 0, 0]), np.array([np.inf, np.inf, 1, 1])]
 onell_lbd1_lbd2_p_c["action_description"] = "lbd1, lbd2, p, c"
 onell_lbd1_lbd2_p_c["observation_description"] = "n, f(x), delta f(x), lbd1_{t-1}, lbd2_{t-1}, p_{t-1}, c_{t-1}"
+
+
+"""
+***************************************
+*            RLS for LeadingOne       *
+***************************************
+"""
+
+#   Name: rls
+#   Description: a setting for RLS (a simplified version of OneLL where ld1=1, ld2=c=0)
+#   State space: n (int), f(x) (int)
+#   action space: k (int)
+rls = objdict(
+    {
+        "name": "rls",
+        "algorithm": "rls",
+        "action_space_class": "Box",
+        "action_space_args": [np.array([1]), np.array([np.inf])],
+        "action_description": "lbd",
+        "observation_space_class": "Box", 
+        "observation_space_type": np.float32,       
+        "observation_space_args": [     
+            np.array([1, 0]),
+            np.array([np.inf, np.inf])   
+        ],
+        "observation_description": "n, f(x)",
+        "reward_range": [-np.inf, np.inf],   # the true reward range is instance dependent
+        "cutoff": 1e9,  # we don't really use this, 
+                        # the real cutoff is in instance_set and is instance dependent
+        "include_xprime": True, # if True, xprime is included in the selection after crossover phase
+        "count_different_inds_only": True, # if True, only count an evaluation of a child if it is different from both of its parents
+        "seed": 0,        
+        "problem": "OneMax",
+        "instance_set_path": "onemax_2000",
+        "benchmark_info": INFO
+    }
+)
+
                         
 def config_to_json(config_name, json_file=None):
     """
@@ -107,7 +150,10 @@ def config_to_json(config_name, json_file=None):
 
     with open(json_file, 'wt') as f:        
         bench = AbstractBenchmark()
-        bench.config = globals()['onell_' + config_name]
+        if not ('rls' in config_name):
+            bench.config = globals()['onell_' + config_name]
+        else: 
+            bench.config = globals()[config_name]
         bench.save_config(json_file)
 
 
@@ -115,7 +161,7 @@ def export_all_configs_to_json(output_dir = './'):
     """
     Export all configs above to json files
     """
-    for config_name in ['lbd_theory', 'lbd_onefifth', 'lbd_p_c', 'lbd1_lbd2_p_c']:
+    for config_name in ['lbd_theory', 'lbd_onefifth', 'lbd_p_c', 'lbd1_lbd2_p_c','rls']:
         config_to_json(config_name, json_file=output_dir + '/' + config_name + '.json')
 
 

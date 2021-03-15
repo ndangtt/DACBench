@@ -5,10 +5,10 @@ import numpy as np
 from dacbench import AbstractEnv
 from dacbench.envs import OneLLEnv
 from dacbench.envs.onell_env import OneMax, LeadingOne
-from dacbench.additional_configs.onell.configs import onell_lbd_theory, onell_lbd_onefifth, onell_lbd_p_c, onell_lbd1_lbd2_p_c
+from dacbench.additional_configs.onell.configs import onell_lbd_theory, onell_lbd_onefifth, onell_lbd_p_c, onell_lbd1_lbd2_p_c, rls
 from dacbench.abstract_benchmark import objdict
 
-onell_configs = [onell_lbd_theory, onell_lbd_onefifth, onell_lbd_p_c, onell_lbd1_lbd2_p_c]
+onell_configs = [onell_lbd_theory, onell_lbd_onefifth, onell_lbd_p_c, onell_lbd1_lbd2_p_c, rls]
 class TestOneLLEnv(unittest.TestCase):
     def make_env(self, config):        
         config['instance_set'] = {0: objdict({'size': 2000, 'max_evals': 30000})}
