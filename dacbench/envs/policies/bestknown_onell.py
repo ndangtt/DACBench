@@ -34,8 +34,5 @@ def get_dyn_onefifth(env, state):
         lbd = min(np.power(3/2, 1/4)*lbd, n-1)
     #print(lbd)
     
-    return np.asarray([lbd])
-        
-
-
+    return np.asarray([lbd])        
 

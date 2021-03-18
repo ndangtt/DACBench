@@ -142,7 +142,10 @@ class PfrlPPO():
         env_seeds = np.arange(n_parallel) + seed * n_parallel
         assert env_seeds.max() < 2 ** 32
 
-        # create a batch of training and evaluation envs        
+        # add outdir into bench_config
+        bench_config['outdir'] = outdir
+
+        # create a batch of training and evaluation envs                
         if self.n_parallel>1:
             self.train_envs = utils.make_batch_env(make_env_func, n_envs=n_parallel, seeds=env_seeds,test_env=False, wrappers=self.train_env_wrappers, bench_config=bench_config)
             if evaluate_during_train:

@@ -6,6 +6,7 @@ from collections import deque
 
 import sys
 import os
+import uuid
 
 from dacbench import AbstractEnv
 
@@ -21,6 +22,13 @@ class BinaryProblem:
             self.data = rng.choice([True,False], size=n) 
         self.n = n
         self.fitness = self.eval()
+
+    
+    def initialise_with_fixed_number_of_bits(self, k, rng=np.random.default_rng()):
+        nbits = self.data.sum()        
+        if nbits < k:            
+            ids = rng.choice(np.where(self.data==False)[0], size=k-nbits, replace=False)
+            self.data[ids] = True
         
 
     def is_optimal(self):
@@ -287,6 +295,14 @@ class OneLLEnv(AbstractEnv):
         self.logger = logging.getLogger(self.__str__())     
 
         self.name = config.name   
+
+        # whether we start at a fixed inital solution or not
+        # if config.init_solution_ratio is not None, we start at a solution with f = n * init_solution_ratio
+        self.init_solution_ratio = None
+        if 'init_solution_ratio' in config:            
+            self.init_solution_ratio = float(config.init_solution_ratio)   
+            self.logger.info("Starting from initial solution with f = %.2f * n" % (self.init_solution_ratio))     
+
         
         # parameters of OneLL-GA
         self.problem = globals()[config.problem]
@@ -330,7 +346,11 @@ class OneLLEnv(AbstractEnv):
         self.rng = np.random.default_rng(seed)   
 
         # for logging
-        self.n_eps = 0 # number of episodes done so far        
+        self.n_eps = 0 # number of episodes done so far
+        self.outdir = None
+        if 'outdir' in config:
+            self.outdir = config.outdir + '/' + str(uuid.uuid4())
+            #self.log_fn_rew_per_state
              
 
 
@@ -352,6 +372,9 @@ class OneLLEnv(AbstractEnv):
 
         # create an initial solution
         self.x = self.problem(n=self.instance.size, rng=self.rng)
+
+        if self.init_solution_ratio:
+            self.x.initialise_with_fixed_number_of_bits(int(self.init_solution_ratio * self.x.n))
 
         # total number of evaluations so far
         self.total_evals = 1                
