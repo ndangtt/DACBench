@@ -29,6 +29,7 @@ class BinaryProblem:
         if nbits < k:            
             ids = rng.choice(np.where(self.data==False)[0], size=k-nbits, replace=False)
             self.data[ids] = True
+            self.eval()
         
 
     def is_optimal(self):
