@@ -305,8 +305,9 @@ class OneLLEnv(AbstractEnv):
             self.logger.info("Starting from initial solution with f = %.2f * n" % (self.init_solution_ratio))     
 
         # name of reward function
-        assert config.reward_choice in ['imp_div_evals', 'imp_plus1_div_evals', 'imp_minus_evals']
+        assert config.reward_choice in ['imp_div_evals', 'imp_div_evals_new', 'imp_minus_evals']
         self.reward_choice = config.reward_choice
+        print("Reward choice: " + self.reward_choice)        
         
         # parameters of OneLL-GA
         self.problem = globals()[config.problem]
@@ -475,10 +476,11 @@ class OneLLEnv(AbstractEnv):
         done = (self.total_evals>=self.instance.max_evals) or (self.x.is_optimal())        
         
         # calculate reward        
+        imp = self.x.fitness - fitness_before_update
         if self.reward_choice=='imp_div_evals':        
-            reward = (self.x.fitness - fitness_before_update) / n_evals
-        elif self.reward_choice=='imp_plus1_div_evals':
-            reward = (self.x.fitness - fitness_before_update + 1) / n_evals
+            reward = imp / n_evals
+        elif self.reward_choice=='imp_div_evals_new':            
+            reward = (self.x.fitness - fitness_before_update - 0.5) / n_evals
         elif self.reward_choice=='imp_minus_evals':
             reward = self.x.fitness - fitness_before_update - n_evals
         self.rewards.append(reward)
