@@ -304,6 +304,9 @@ class OneLLEnv(AbstractEnv):
             self.init_solution_ratio = float(config.init_solution_ratio)   
             self.logger.info("Starting from initial solution with f = %.2f * n" % (self.init_solution_ratio))     
 
+        # name of reward function
+        assert config.reward_choice in ['imp_div_evals', 'imp_plus1_div_evals', 'imp_minus_evals']
+        self.reward_choice = config.reward_choice
         
         # parameters of OneLL-GA
         self.problem = globals()[config.problem]
@@ -353,7 +356,6 @@ class OneLLEnv(AbstractEnv):
             self.outdir = config.outdir + '/' + str(uuid.uuid4())
             #self.log_fn_rew_per_state
              
-
 
     def reset(self):
         """
@@ -433,8 +435,7 @@ class OneLLEnv(AbstractEnv):
         if not 'c' in rs.keys():
             rs['c'] = 1 / rs['lbd1']
 
-        return rs['lbd1'], rs['lbd2'], rs['p'], rs['c']
-
+        return rs['lbd1'], rs['lbd2'], rs['p'], rs['c']    
     
     def step(self, action):
         """
@@ -474,8 +475,12 @@ class OneLLEnv(AbstractEnv):
         done = (self.total_evals>=self.instance.max_evals) or (self.x.is_optimal())        
         
         # calculate reward        
-        #reward = self.x.fitness - fitness_before_update - n_evals
-        reward = (self.x.fitness - fitness_before_update)/n_evals
+        if self.reward_choice=='imp_div_evals':        
+            reward = (self.x.fitness - fitness_before_update) / n_evals
+        elif self.reward_choice=='imp_plus1_div_evals':
+            reward = (self.x.fitness - fitness_before_update + 1) / n_evals
+        elif self.reward_choice=='imp_minus_evals':
+            reward = self.x.fitness - fitness_before_update - n_evals
         self.rewards.append(reward)
 
         # update histories
