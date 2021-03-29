@@ -33,7 +33,7 @@ TODO:
 from collections import OrderedDict
 from dacbench.abstract_benchmark import objdict
 import logging
-import solve_onell.pfrl_utils as utils
+import solve_onell.ppo.pfrl_utils as utils
 import os
 import json
 import pfrl

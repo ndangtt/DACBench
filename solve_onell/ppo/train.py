@@ -1,6 +1,6 @@
-from solve_onell.pfrl_ppo import PfrlPPO
+from solve_onell.ppo.pfrl_ppo import PfrlPPO
 from dacbench.benchmarks.onell_benchmark import OneLLBenchmark
-import solve_onell.pfrl_utils as pfrl_utils
+import solve_onell.ppo.pfrl_utils as pfrl_utils
 import pfrl
 import logging
 import argparse
