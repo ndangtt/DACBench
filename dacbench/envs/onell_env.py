@@ -357,6 +357,9 @@ class OneLLEnv(AbstractEnv):
             self.outdir = config.outdir + '/' + str(uuid.uuid4())
             #self.log_fn_rew_per_state
              
+    def seed(self, seed=None):
+        super(OneLLEnv, self).seed(seed)
+        self.rng = np.random.default_rng(seed)
 
     def reset(self):
         """

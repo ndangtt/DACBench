@@ -10,22 +10,22 @@ class OneLLBenchmark(AbstractBenchmark):
     Benchmark with various settings for (1+(lbd, lbd))-GA
     """
 
-    def __init__(self, config_path=None, config=None):
+    def __init__(self, base_config_name=None, config=None):
         """
         Initialize OneLL benchmark
 
         Parameters            
         -------
-        config_name: str
+        base_config_name: str
             OneLL's config name
-            possible values: 'lbd_a', 'lbd_b', 'lbd_p_c', 'lbd1_lbd2_p_c'
-        config_path : str
-            path to config file (optional)
-            all options specified in config_path will override the ones in config_name
+            possible values: see ../additional_configs/onell/configs.py
+        config : str
+            a dictionary, all options specified in this argument will override the one in base_config_name
 
         """
-        if config_path is None:            
-            config_path = os.path.dirname(os.path.abspath(__file__)) + '/../additional_configs/onell/lbd_theory.json'        
+        if base_config_name is None:   
+            base_config_name = 'lbd_theory'
+        config_path = os.path.dirname(os.path.abspath(__file__)) + '/../additional_configs/onell/' + base_config_name + '.json'        
         super(OneLLBenchmark, self).__init__(config_path)        
 
         if config:
