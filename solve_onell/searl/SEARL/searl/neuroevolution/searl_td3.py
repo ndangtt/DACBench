@@ -1,5 +1,6 @@
 import copy
 import time
+import sys
 
 import gym
 import numpy as np
@@ -23,6 +24,9 @@ class SEARLforTD3():
         self.cfg = config
         self.log = logger
         self.ckp = checkpoint
+
+        #print("HERE")
+        #print(self.cfg.mutation.rl_hp_ranges.lr_actor)
 
         torch.manual_seed(self.cfg.seed.torch)
         np.random.seed(self.cfg.seed.numpy)
@@ -112,6 +116,10 @@ class SEARLforTD3():
             for ind in population:
                 ind.train_log['epoch'] = epoch
 
+            #DEBUG
+            #print(population[0].__dict__)
+            #sys.exit(0)
+
             population_mean_fitness, population_var_fitness, eval_frames = \
                 self.log.log_func(self.eval.evaluate_population, population=population,
                                   exploration_noise=self.cfg.eval.exploration_noise,
@@ -144,7 +152,7 @@ class SEARLforTD3():
             if self.cfg.nevo.mutation:
                 population = self.log.log_func(self.mutation.mutation, population)
 
-            if self.cfg.nevo.training:
+            if self.cfg.nevo.training and num_frames>self.cfg.nevo.min_train_time: # ND: bug fix
                 population = self.log.log_func(self.training.train, population=population, eval_frames=eval_frames,
                                                pool=pool)
 
@@ -171,7 +179,7 @@ def start_searl_td3_run(config, expt_dir):
         log = sup.get_logger()
 
         #env = gym.make(cfg.env.name)
-        env = make_env(cfg.bench)
+        env = make_env(cfg.bench) # ND: change this
         cfg.set_attr("action_dim", env.action_space.shape[0])
         cfg.set_attr("state_dim", env.observation_space.shape[0])
 

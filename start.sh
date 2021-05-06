@@ -6,4 +6,4 @@ export PYTHONPATH=$DIR/:$PYTHONPATH
 export PYTHONPATH=$DIR/solve_onell/searl/SEARL/:$PYTHONPATH
 
 # pfrl
-export PYTHONPATH=/home/nttd/RL/dac-onell/pfrl:$PYTHONPATH
+export PYTHONPATH=$DIR/../pfrl:$PYTHONPATH

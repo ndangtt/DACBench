@@ -54,40 +54,56 @@ class Mutations():
     def rl_hyperparam_mutation(self, individual):
 
         rl_config = individual.rl_config
-        rl_params = self.cfg.mutation.rl_hp_selection
-        mutate_param = self.rng.choice(rl_params, 1)[0]
+        rl_params = self.cfg.mutation.rl_hp_selection        
+        mutate_param = self.rng.choice(rl_params, 1)[0]   
+
+        # ND: add this to set ranges of rl hyper-params
+        rl_params_ranges = self.cfg.mutation.rl_hp_ranges
+        min_val = getattr(rl_params_ranges, mutate_param)[0]
+        max_val = getattr(rl_params_ranges, mutate_param)[0]
+        cur_val = getattr(rl_config, mutate_param)
 
         random_num = self.rng.uniform(0, 1)
         if mutate_param == 'train_frames_fraction':
             if random_num > 0.5:
-                setattr(rl_config, mutate_param, min(0.1, max(3.0, getattr(rl_config, mutate_param) * 1.2)))
+                #setattr(rl_config, mutate_param, min(0.1, max(3.0, getattr(rl_config, mutate_param) * 1.2)))
+                setattr(rl_config, mutate_param, np.clip(cur_val*1.2, min_val, max_val))
             else:
-                setattr(rl_config, mutate_param, min(0.1, max(3.0, getattr(rl_config, mutate_param) * 0.8)))
+                #setattr(rl_config, mutate_param, min(0.1, max(3.0, getattr(rl_config, mutate_param) * 0.8)))
+                setattr(rl_config, mutate_param, np.clip(cur_val*0.8, min_val, max_val))
         elif mutate_param == 'batch_size':
             if random_num > 0.5:
-                setattr(rl_config, mutate_param, min(128, max(8, int(getattr(rl_config, mutate_param) * 1.2))))
+                #setattr(rl_config, mutate_param, min(128, max(8, int(getattr(rl_config, mutate_param) * 1.2))))
+                setattr(rl_config, mutate_param, np.clip(cur_val*2, min_val, max_val))
             else:
-                setattr(rl_config, mutate_param, min(128, max(8, int(getattr(rl_config, mutate_param) * 0.8))))
+                #setattr(rl_config, mutate_param, min(128, max(8, int(getattr(rl_config, mutate_param) * 0.8))))
+                setattr(rl_config, mutate_param, np.clip(cur_val/2, min_val, max_val))
         elif mutate_param == 'lr_actor':
             if random_num > 0.5:
-                setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 1.2)))
+                #setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 1.2)))
+                setattr(rl_config, mutate_param, np.clip(cur_val*1.2, min_val, max_val))
             else:
-                setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 0.8)))
+                #setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 0.8)))
+                setattr(rl_config, mutate_param, np.clip(cur_val*0.8, min_val, max_val))
         elif mutate_param == 'lr_critic':
             if random_num > 0.5:
-                setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 1.2)))
+                #setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 1.2)))
+                setattr(rl_config, mutate_param, np.clip(cur_val*1.2, min_val, max_val))
             else:
-                setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 0.8)))
+                #setattr(rl_config, mutate_param, min(0.005, max(0.00001, getattr(rl_config, mutate_param) * 0.8)))
+                setattr(rl_config, mutate_param, np.clip(cur_val*0.8, min_val, max_val))
         elif mutate_param == 'td3_policy_noise':
-            if getattr(rl_config, mutate_param):
-                setattr(rl_config, mutate_param, False)
+            if getattr(rl_config, mutate_param) > (min_val + 0.00001):
+                setattr(rl_config, mutate_param, min_val)
             else:
-                setattr(rl_config, mutate_param, 0.1)
+                setattr(rl_config, mutate_param, max_val)
         elif mutate_param == 'td3_update_freq':
             if random_num > 0.5:
-                setattr(rl_config, mutate_param, min(10, max(1, int(getattr(rl_config, mutate_param) + 1))))
+                #setattr(rl_config, mutate_param, min(10, max(1, int(getattr(rl_config, mutate_param) + 1))))
+                setattr(rl_config, mutate_param, np.clip(cur_val+1, min_val, max_val))
             else:
-                setattr(rl_config, mutate_param, min(10, max(1, int(getattr(rl_config, mutate_param) - 1))))
+                #setattr(rl_config, mutate_param, min(10, max(1, int(getattr(rl_config, mutate_param) - 1))))
+                setattr(rl_config, mutate_param, np.clip(cur_val-1, min_val, max_val))
         elif mutate_param == 'optimizer':
             opti_selection = ["adam", "adamax", "rmsprop", "sdg"]
             opti_selection.remove(getattr(rl_config, mutate_param))

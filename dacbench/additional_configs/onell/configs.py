@@ -35,7 +35,7 @@ onell_lbd_theory = objdict(
         "name": "lbd_theory",
         "algorithm": "onell",
         "action_space_class": "Box",
-        "action_space_args": [np.array([1]), np.array([np.inf])],
+        "action_space_args": [np.array([1]), np.array([100])],
         "action_description": "lbd",
         "observation_space_class": "Box", 
         "observation_space_type": np.float32,       

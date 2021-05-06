@@ -84,6 +84,10 @@ class TD3(object):
                 t_state = to_tensor(next_state).unsqueeze(0)
                 episode_reward += reward
 
+                # ND: add this
+                if info:
+                    self.log("(evaluate) " + info)
+
             episode_reward_list.append(episode_reward)
 
         avg_reward = np.mean(episode_reward_list)
@@ -106,6 +110,8 @@ class TD3(object):
         timesteps_since_eval = 0
         episode_num = 0
         done = True
+
+        is_exploring = True # ND: add this
 
         while total_timesteps < self.cfg.td3.max_timesteps:
 
@@ -135,9 +141,16 @@ class TD3(object):
                 episode_timesteps = 0
                 episode_num += 1
 
+            # ND: add this
+            if is_exploring and total_timesteps >= self.cfg.td3.start_timesteps:
+                is_exploring = False
+                self.log("STOP EXPLORING")
+
             # Select action randomly or according to policy
             if total_timesteps < self.cfg.td3.start_timesteps:
                 action = self.env.action_space.sample()
+                action = 2 * (action - self.env.action_space.low) / (self.env.action_space.high - self.env.action_space.low) - 1 # ND: bug fix (convert action to [-1,1])
+                
                 action = to_tensor(action)
             else:
                 action = self.actor(t_state)
@@ -154,7 +167,12 @@ class TD3(object):
 
             next_state, reward, done, info = self.env.step(step_action)  # Simulate one step in environment
 
-            done_bool = 0 if episode_timesteps + 1 == self.env._max_episode_steps else float(done)
+            #done_bool = 0 if episode_timesteps + 1 == self.env._max_episode_steps else float(done)
+            done_bool = float(done) # ND: is it okay?
+
+            # ND: add this
+            if info:
+                self.log("(training) " + info)
 
             t_next_state = to_tensor(next_state).unsqueeze(0)
 
@@ -275,7 +293,8 @@ def start_TD3_training(config, expt_dir):
         cfg = sup.get_config()
         log = sup.get_logger()
 
-        env = gym.make(cfg.env.name)
+        #env = gym.make(cfg.env.name)
+        env = make_env(cfg.bench)
         cfg.set_attr("action_dim", env.action_space.shape[0])
         cfg.set_attr("state_dim", env.observation_space.shape[0])
 

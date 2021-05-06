@@ -213,8 +213,7 @@ class EvolvableMLP(nn.Module):
                             param.data[:min(old_size[0], new_size[0])] = old_net_dict[key].data[
                                                                          :min(old_size[0], new_size[0])]
                         else:
-                            param.data[:min(old_size[0], new_size[0]), :min(old_size[1], new_size[1])] = old_net_dict[
-                                                                                                             key].data[
+                            param.data[:min(old_size[0], new_size[0]), :min(old_size[1], new_size[1])] = old_net_dict[ key].data[
                                                                                                          :min(old_size[
                                                                                                                   0],
                                                                                                               new_size[

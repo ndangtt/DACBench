@@ -5,6 +5,8 @@ import gym
 import numpy as np
 import torch
 
+import sys
+
 from searl.neuroevolution.components.utils import to_tensor, Transition
 from solve_onell.searl.utils import make_env
 
@@ -24,12 +26,12 @@ class MPEvaluation():
         self.eval_episodes = config.eval.eval_episodes
 
     def test_individual(self, individual, epoch):
-        return_dict = self._evaluate_individual(individual, self.cfg, self.cfg.eval.test_episodes, epoch, False)
+        return_dict = self._evaluate_individual(individual, self.cfg, self.cfg.eval.test_episodes, epoch, False, test=True)
         fitness = np.mean(return_dict[individual.index]["fitness_list"])
         return fitness
 
-    @staticmethod
-    def _evaluate_individual(individual, config, num_episodes, seed, exploration_noise=False, start_phase=False):
+    #@staticmethod
+    def _evaluate_individual(self, individual, config, num_episodes, seed, exploration_noise=False, start_phase=False, test=False):
 
         actor_net = individual.actor
 
@@ -51,11 +53,12 @@ class MPEvaluation():
                 t_state = to_tensor(state).unsqueeze(0)
                 done = False
                 while not done:
-                    if start_phase:
+                    if start_phase:                        
                         action = env.action_space.sample()
+                        action = 2 * (action - env.action_space.low) / (env.action_space.high - env.action_space.low) - 1 # ND: bug fix (convert action to [-1,1])
                         action = to_tensor(action)
                     else:
-                        action = actor_net(t_state)
+                        action = actor_net(t_state)                    
                     action.clamp(-1, 1)
                     action = action.data.numpy()
                     if exploration_noise is not False:
@@ -68,6 +71,12 @@ class MPEvaluation():
                     step_action += env.action_space.low
 
                     next_state, reward, done, info = env.step(step_action)  # Simulate one step in environment
+
+                    if info:
+                        if test:
+                            self.log("(evaluate) " + info)
+                        else:
+                            self.log("(training) " + info)
 
                     #done_bool = 0 if num_frames + 1 == env._max_episode_steps else float(done)
                     done_bool = float(done) # ND: is it okay?

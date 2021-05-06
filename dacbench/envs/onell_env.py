@@ -300,14 +300,14 @@ class OneLLEnv(AbstractEnv):
         # whether we start at a fixed inital solution or not
         # if config.init_solution_ratio is not None, we start at a solution with f = n * init_solution_ratio
         self.init_solution_ratio = None
-        if 'init_solution_ratio' in config:            
+        if ('init_solution_ratio' in config) and (config.init_solution_ratio!=None) and (config.init_solution_ratio!='None'):            
             self.init_solution_ratio = float(config.init_solution_ratio)   
             self.logger.info("Starting from initial solution with f = %.2f * n" % (self.init_solution_ratio))     
 
         # name of reward function
         assert config.reward_choice in ['imp_div_evals', 'imp_div_evals_new', 'imp_minus_evals']
         self.reward_choice = config.reward_choice
-        print("Reward choice: " + self.reward_choice)        
+        #print("Reward choice: " + self.reward_choice)        
         
         # parameters of OneLL-GA
         self.problem = globals()[config.problem]
@@ -500,15 +500,18 @@ class OneLLEnv(AbstractEnv):
         #print("steps:%5d\t evals:%5d\t lbd:%5d\t f:%5d" %(self.c_step, self.total_evals, lbd1, self.x.fitness), end='\r')
         self.lbds.append(lbd1)
         
+        returned_info = None
         if done:
             self.n_eps += 1
             if hasattr(self, "env_type"):
                 msg = "Env " + self.env_type + ". "
             else:
-                msg = ""            
-            self.logger.info(msg + "Episode done: ep=%d; n=%d; obj=%d; init_obj=%d; evals=%d; steps=%d; lbd_min=%d; lbd_max=%d; lbd_mean=%.3f; R=%.1f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards)))                       
+                msg = ""    
+            msg += "Episode done: ep=%d; n=%d; obj=%d; init_obj=%d; evals=%d; max_evals=%d; steps=%d; lbd_min=%.1f; lbd_max=%.1f; lbd_mean=%.1f; R=%.4f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.max_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards))      
+            self.logger.info(msg) 
+            returned_info = msg                      
         
-        return self.get_state(), reward, done, {}    
+        return self.get_state(), reward, done, returned_info    
             
 
     def close(self) -> bool:
