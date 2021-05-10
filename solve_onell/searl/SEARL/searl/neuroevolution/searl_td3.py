@@ -174,7 +174,7 @@ class SEARLforTD3():
 
 
 def start_searl_td3_run(config, expt_dir):
-    with Supporter(experiments_dir=expt_dir, config_dict=config, count_expt=True) as sup:
+    with Supporter(experiments_dir=expt_dir, config_dict=config, count_expt=False) as sup:
         cfg = sup.get_config()
         log = sup.get_logger()
 
