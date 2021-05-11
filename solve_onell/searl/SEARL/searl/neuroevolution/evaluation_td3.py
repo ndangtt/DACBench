@@ -72,11 +72,11 @@ class MPEvaluation():
 
                     next_state, reward, done, info = env.step(step_action)  # Simulate one step in environment
 
-                    if info:
+                    if done:
                         if test:
-                            self.log("(evaluate) " + info)
+                            self.log("(evaluate) " + info['msg'])
                         else:
-                            self.log("(training) " + info)
+                            self.log("(training) " + info['msg'])
 
                     #done_bool = 0 if num_frames + 1 == env._max_episode_steps else float(done)
                     done_bool = float(done) # ND: is it okay?

@@ -6,17 +6,17 @@ import matplotlib.pyplot as plt
 import time
 import sys
 
-def read_optimal_results(n, init_solution_ratio, prefix='./data/dyn_theory'):
+def read_optimal_results(n, init_solution_ratio, value_name, prefix='./data/dyn_theory'):
     if init_solution_ratio:
         fn = prefix + '-' + str(init_solution_ratio) + '.csv'
     else:
         fn = prefix + '.csv'
     t = pd.read_csv(fn)
-    ls = t[t.n==n].n_evals
+    ls = t[t.n==n][value_name]
     return ls.mean(), ls.std()
 
 
-def make_plot(exp_dir):
+def make_plot(exp_dir, value_name):
     plt.clf()
 
     # read configuration
@@ -34,7 +34,7 @@ def make_plot(exp_dir):
     #print(np.array([float(s.split('=')[1]) for s in line.split('Episode done:')[1].split('; ')])[[1,4,7,8,9,10]])
     t = pd.DataFrame(vals, columns=['n','evals','lbd_min','lbd_max','lbd_mean','R'])
     plt.subplot(1,2,1)
-    plt.plot(t['evals'])
+    plt.plot(t[value_name])
     plt.title('training plot')
 
     # evaluation plot
@@ -46,7 +46,7 @@ def make_plot(exp_dir):
         eval_episodes = int(conf['eval'].test_episodes)
     n_rows = len(t.index)
     t['iteration'] = np.repeat(np.arange(np.ceil(n_rows/eval_episodes)), eval_episodes)[:n_rows]
-    t1 = t.groupby(['n','iteration']).evals.agg([np.mean,np.std]).reset_index()
+    t1 = t.groupby(['n','iteration'])[value_name].agg([np.mean,np.std]).reset_index()
     plt.subplot(1,2,2)
     plt.plot(t1.iteration, t1['mean'])
     plt.fill_between(t1.iteration, t1['mean'] - t1['std'], t1['mean'] + t1['std'], alpha=0.2)
@@ -56,14 +56,18 @@ def make_plot(exp_dir):
     init_solution_ratio = None
     if ('init_solution_ratio' in conf['bench'].__dict__) and (conf['bench'].init_solution_ratio != None):
         init_solution_ratio = float(conf['bench'].init_solution_ratio)
-    mean, std = read_optimal_results(t.n[0], init_solution_ratio)
+    if value_name == 'R':
+        optim_value_name = conf['bench'].reward_choice
+    elif value_name == 'evals':
+        optim_value_name = 'n_evals'
+    mean, std = read_optimal_results(t.n[0], init_solution_ratio, optim_value_name)
     plt.plot(t1.iteration, [mean]*len(t1.iteration), color='red')
     plt.fill_between(t1.iteration, [mean-std]*len(t1.iteration), [mean+std]*len(t1.iteration), color='red', alpha=0.2)
 
     plt.title('evaluation plot')
 
     #plt.show()
-    plt.savefig(exp_dir + '/plot.png')
+    plt.savefig(exp_dir + '/plot-' + value_name + '.png')
 
 
 
@@ -71,7 +75,9 @@ def make_plot(exp_dir):
 def main():
     exp_dir = sys.argv[1]
     while True:
-        make_plot(exp_dir)
-        time.sleep(1)
+        for value_name in ['evals','R']:
+            make_plot(exp_dir, value_name)
+        #time.sleep(1)
+        sys.exit(0)
 
 main()

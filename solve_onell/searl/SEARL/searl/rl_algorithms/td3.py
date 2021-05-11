@@ -85,8 +85,8 @@ class TD3(object):
                 episode_reward += reward
 
                 # ND: add this
-                if info:
-                    self.log("(evaluate) " + info)
+                if done:
+                    self.log("(evaluate) " + info['msg'])
 
             episode_reward_list.append(episode_reward)
 
