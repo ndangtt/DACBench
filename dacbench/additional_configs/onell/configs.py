@@ -123,6 +123,7 @@ rls = objdict(
         ],
         "observation_description": "n, f(x)",
         "reward_range": [-np.inf, np.inf],   # the true reward range is instance dependent
+        "reward_choice": "imp_div_evals_new",
         "cutoff": 1e9,  # we don't really use this, 
                         # the real cutoff is in instance_set and is instance dependent
         "include_xprime": True, # if True, xprime is included in the selection after crossover phase
