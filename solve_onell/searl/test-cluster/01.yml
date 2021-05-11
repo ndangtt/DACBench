@@ -1,5 +1,6 @@
 # min_train_time=2000, batch_size=1000, train_frames_fraction=0.5, start_time_steps=3000
-# hidden layers: [128,128]
+# hidden layers: [128]
+# n=500, initial=475, max_action: 50
 
 #######################################
 ###       Logging Configuration     ###
@@ -86,7 +87,7 @@ bench:
   instance_set_path:            'onemax_500'
   reward_choice:                'imp_div_evals_new'
   init_solution_ratio:          0.95
-  action_space_args:            [[1], [20]]
+  action_space_args:            [[1], [50]]
 
 
 
@@ -102,7 +103,7 @@ eval:
 ###  Actor Starting Configuration   ###
 #######################################
 actor:
-  hidden_size:             [128, 128]
+  hidden_size:             [128]
   activation:              'relu' #'relu' , 'sigmoid' 'softplus',
   output_activation:       'tanh'
   layer_norm:              True
@@ -112,7 +113,7 @@ actor:
 ###  Critic Starting Configuration  ###
 #######################################
 critic:
-  hidden_size:             [128, 128]
+  hidden_size:             [128]
   activation:              'relu' #'relu' , 'sigmoid' 'softplus',
   output_activation:       'linear'
   layer_norm:              True

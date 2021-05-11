@@ -1,4 +1,6 @@
-# min_train_time=2000, batch_size=1000, train_frames_fraction=0.5, start_time_steps=3000
+# min_train_time=6000, batch_size=2000, train_frames_fraction=0.5, start_time_steps=10000
+# hidden layers: [128]
+# n=500, initial=475, max_action: 50
 
 #######################################
 ###       Logging Configuration     ###
@@ -85,7 +87,7 @@ bench:
   instance_set_path:            'onemax_500'
   reward_choice:                'imp_div_evals_new'
   init_solution_ratio:          0.95
-  action_space_args:            [[1], [20]]
+  action_space_args:            [[1], [50]]
 
 
 
