@@ -500,7 +500,7 @@ class OneLLEnv(AbstractEnv):
         #print("steps:%5d\t evals:%5d\t lbd:%5d\t f:%5d" %(self.c_step, self.total_evals, lbd1, self.x.fitness), end='\r')
         self.lbds.append(lbd1)
         
-        returned_info = None
+        returned_info = {"msg": "", "values":{}}
         if done:
             self.n_eps += 1
             if hasattr(self, "env_type"):
@@ -509,9 +509,10 @@ class OneLLEnv(AbstractEnv):
                 msg = ""    
             msg += "Episode done: ep=%d; n=%d; obj=%d; init_obj=%d; evals=%d; max_evals=%d; steps=%d; lbd_min=%.1f; lbd_max=%.1f; lbd_mean=%.1f; R=%.4f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.max_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards))      
             self.logger.info(msg) 
-            returned_info = msg                      
+            returned_info['msg'] = msg
+            returned_info['values'] = {'n':self.n, 'obj': self.x.fitness, 'init_obj': self.init_obj, 'evals': self.total_evals, 'max_evals': self.max_evals, 'steps': self.c_step, 'lbd_min': min(self.lbds), 'lbd_max': max(self.lbds), 'lbd_mean': sum(self.lbds)/len(self.lbds), 'R': sum(self.rewards)}
         
-        return self.get_state(), reward, done, returned_info    
+        return self.get_state(), reward, done, returned_info
             
 
     def close(self) -> bool:
