@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import time
 import sys
 
+
 def read_optimal_results(n, init_solution_ratio, value_name, prefix='./data/dyn_theory'):
     if init_solution_ratio:
         fn = prefix + '-' + str(init_solution_ratio) + '.csv'
@@ -16,8 +17,8 @@ def read_optimal_results(n, init_solution_ratio, value_name, prefix='./data/dyn_
     return ls.mean(), ls.std()
 
 
-def make_plot(exp_dir, value_name):
-    plt.clf()
+def make_plot(exp_dir, value_name, nrows=1, ncols=2, plot_id_start=1):
+    #plt.clf()
 
     # read configuration
     config_file = exp_dir + "/config/config.yml"   
@@ -33,9 +34,9 @@ def make_plot(exp_dir, value_name):
     vals = [np.array([float(s.split('=')[1]) for s in line.split('Episode done:')[1].split('; ')])[[1,4,7,8,9,10]] for line in ls_lines if '(training)' in line]
     #print(np.array([float(s.split('=')[1]) for s in line.split('Episode done:')[1].split('; ')])[[1,4,7,8,9,10]])
     t = pd.DataFrame(vals, columns=['n','evals','lbd_min','lbd_max','lbd_mean','R'])
-    plt.subplot(1,2,1)
+    plt.subplot(nrows,ncols,plot_id_start)
     plt.plot(t[value_name])
-    plt.title('training plot')
+    plt.title('training-' + value_name)
 
     # evaluation plot
     vals = [np.array([float(s.split('=')[1]) for s in line.split('Episode done:')[1].split('; ')])[[1,4,7,8,9,10]] for line in ls_lines if '(evaluate)' in line]
@@ -47,7 +48,7 @@ def make_plot(exp_dir, value_name):
     n_rows = len(t.index)
     t['iteration'] = np.repeat(np.arange(np.ceil(n_rows/eval_episodes)), eval_episodes)[:n_rows]
     t1 = t.groupby(['n','iteration'])[value_name].agg([np.mean,np.std]).reset_index()
-    plt.subplot(1,2,2)
+    plt.subplot(nrows,ncols,plot_id_start+1)
     plt.plot(t1.iteration, t1['mean'])
     plt.fill_between(t1.iteration, t1['mean'] - t1['std'], t1['mean'] + t1['std'], alpha=0.2)
     plt.xlim([t1.iteration.min(),t1.iteration.max()])
@@ -64,19 +65,27 @@ def make_plot(exp_dir, value_name):
     plt.plot(t1.iteration, [mean]*len(t1.iteration), color='red')
     plt.fill_between(t1.iteration, [mean-std]*len(t1.iteration), [mean+std]*len(t1.iteration), color='red', alpha=0.2)
 
-    plt.title('evaluation plot')
+    plt.title('evaluation-'+value_name)
 
     #plt.show()
-    plt.savefig(exp_dir + '/plot-' + value_name + '.png')
+    #plt.savefig(exp_dir + '/plot-' + value_name + '.png')
 
 
 
 
 def main():
     exp_dir = sys.argv[1]
+    value_names = ['evals','R']
+    nrows = len(value_names)
+    ncols = 2
     while True:
+        plt.clf()
+        plot_start_id = 1
         for value_name in ['evals','R']:
-            make_plot(exp_dir, value_name)
+            make_plot(exp_dir, value_name, nrows, ncols, plot_start_id)
+            plot_start_id += 2
+        plt.tight_layout()
+        plt.savefig(exp_dir + '/plot.png')
         #time.sleep(1)
         sys.exit(0)
 
