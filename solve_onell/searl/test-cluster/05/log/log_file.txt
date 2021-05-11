@@ -1,0 +1,511 @@
+2021-05-11_13:15:11.45 LOGGER: start logging with Python version: 3.6.6 |Anaconda, Inc.|  
+2021-05-11_13:15:11.45 project_name:  
+2021-05-11_13:15:11.46 session_name:  
+2021-05-11_13:15:11.46 experiment_name:  
+2021-05-11_13:15:22.08 #################### CONFIG: 
+2021-05-11_13:15:22.08 sub config expt    : ['experiment_name :   ', 'experiments_dir : test-cluster/05  ', 'project_name :   ', 'session_name :   '] 
+2021-05-11_13:15:22.08 sub config nevo    : ['elitism : True  ', 'ind_memory : False  ', 'init_random : False  ', 'min_train_time : 2000  ', 'mutation : True  ', 'population_size : 5  ', 'reuse_batch : 1  ', 'selection : True  ', 'tournament_size : 3  ', 'training : True  ', 'worker : 5  '] 
+2021-05-11_13:15:22.08 sub config mutation: ['activation : 0.2  ', 'architecture : 0.2  ', 'mutation_sd : 0.1  ', 'new_layer_prob : 0.2  ', 'no_mutation : 0.2  ', 'parameters : 0.2  ', "rl_hp_ranges : {'lr_actor': [1e-05, 0.005], 'lr_critic': [1e-05, 0.005], 'batch_size': [128, 4096], 'td3_policy_noise': [0, 0.1], 'train_frames_fraction': [0.1, 3.0]}  ", "rl_hp_selection : ['lr_actor', 'lr_critic', 'batch_size', 'td3_policy_noise']  ", 'rl_hyperparam : 0.2  ', "sub_config : ['rl_hp_ranges']  "] 
+2021-05-11_13:15:22.08 sub config rl_hp_ranges: ['batch_size : [128, 4096]  ', 'lr_actor : [1e-05, 0.005]  ', 'lr_critic : [1e-05, 0.005]  ', 'td3_policy_noise : [0, 0.1]  ', 'train_frames_fraction : [0.1, 3.0]  '] 
+2021-05-11_13:15:22.08 sub config train   : ['evo_warm_up : 1  ', 'min_train_steps : 250  ', 'num_frames : 2000000  ', 'replay_memory_size : 1000000  ', 'td3_double_q : True  '] 
+2021-05-11_13:15:22.08 sub config rl      : ['batch_size : 1000  ', 'clip_grad_norm : 100  ', 'gamma : 0.99  ', 'lr_actor : 0.001  ', 'lr_critic : 0.001  ', 'optimizer : adam  ', 'start_timesteps : 3000  ', 'tau : 0.005  ', 'td3_noise_clip : 0.5  ', 'td3_policy_noise : 0.2  ', 'td3_update_freq : 2  ', 'train_frames_fraction : 0.2  '] 
+2021-05-11_13:15:22.09 sub config seed    : ['evaluation : 123  ', 'mutation : 123  ', 'numpy : 123  ', 'replay_memory : 123  ', 'torch : 123  ', 'training : 123  '] 
+2021-05-11_13:15:22.09 sub config bench   : ['action_space_args : [[1], [50]]  ', 'base_config_name : lbd_theory  ', 'init_solution_ratio : 0.95  ', 'instance_set_path : onemax_500  ', 'name : dacbench.benchmarks.onell_benchmark.OneLLBenchmark  ', 'reward_choice : imp_minus_evals  '] 
+2021-05-11_13:15:22.09 sub config eval    : ['eval_episodes : 1  ', 'exploration_noise : 0  ', 'min_eval_steps : 250  ', 'test_episodes : 10  ', 'test_seed : 123  '] 
+2021-05-11_13:15:22.09 sub config actor   : ['activation : relu  ', 'hidden_size : [128]  ', 'layer_norm : True  ', 'output_activation : tanh  ', 'output_vanish : False  '] 
+2021-05-11_13:15:22.09 sub config critic  : ['activation : relu  ', 'hidden_size : [128]  ', 'layer_norm : True  ', 'output_activation : linear  ', 'output_vanish : True  '] 
+2021-05-11_13:15:22.11 initialize replay memory 
+2021-05-11_13:15:26.45 initialize population 
+2021-05-11_13:15:27.06 ##### START EPOCH 1-step:0 
+2021-05-11_13:15:27.06 ##### evaluate_population 
+2021-05-11_13:15:27.06 start phase-step:0 
+2021-05-11_13:15:30.75 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1555; max_evals=6459; steps=43; lbd_min=1.0; lbd_max=48.5; lbd_mean=22.4; R=-1529.0000 
+2021-05-11_13:15:30.86 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1750; max_evals=6459; steps=45; lbd_min=1.2; lbd_max=49.9; lbd_mean=24.0; R=-1724.0000 
+2021-05-11_13:15:30.96 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1608; max_evals=6459; steps=43; lbd_min=2.0; lbd_max=50.0; lbd_mean=23.5; R=-1582.0000 
+2021-05-11_13:15:31.09 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2043; max_evals=6459; steps=61; lbd_min=1.1; lbd_max=49.0; lbd_mean=21.2; R=-2017.0000 
+2021-05-11_13:15:31.21 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1948; max_evals=6459; steps=44; lbd_min=3.4; lbd_max=49.9; lbd_mean=27.7; R=-1922.0000 
+2021-05-11_13:15:31.33 (training) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2021; max_evals=6459; steps=45; lbd_min=1.2; lbd_max=49.7; lbd_mean=28.1; R=-1995.0000 
+2021-05-11_13:15:31.80 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2311; max_evals=6459; steps=58; lbd_min=2.0; lbd_max=48.7; lbd_mean=24.7; R=-2285.0000 
+2021-05-11_13:15:31.94 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2299; max_evals=6459; steps=61; lbd_min=1.3; lbd_max=49.2; lbd_mean=23.9; R=-2273.0000 
+2021-05-11_13:15:32.06 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1949; max_evals=6459; steps=46; lbd_min=1.7; lbd_max=49.5; lbd_mean=26.2; R=-1923.0000 
+2021-05-11_13:15:32.16 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1726; max_evals=6459; steps=45; lbd_min=2.8; lbd_max=49.9; lbd_mean=24.2; R=-1700.0000 
+2021-05-11_13:15:32.28 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1868; max_evals=6459; steps=46; lbd_min=1.4; lbd_max=49.3; lbd_mean=25.0; R=-1842.0000 
+2021-05-11_13:15:32.71 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1741; max_evals=6459; steps=44; lbd_min=2.8; lbd_max=47.9; lbd_mean=24.6; R=-1715.0000 
+2021-05-11_13:15:32.83 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1749; max_evals=6459; steps=52; lbd_min=1.1; lbd_max=48.5; lbd_mean=21.0; R=-1723.0000 
+2021-05-11_13:15:32.99 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2573; max_evals=6459; steps=59; lbd_min=1.3; lbd_max=49.5; lbd_mean=27.0; R=-2547.0000 
+2021-05-11_13:15:33.17 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2973; max_evals=6459; steps=81; lbd_min=1.1; lbd_max=48.3; lbd_mean=22.5; R=-2947.0000 
+2021-05-11_13:15:33.29 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1821; max_evals=6459; steps=40; lbd_min=3.2; lbd_max=49.3; lbd_mean=28.3; R=-1795.0000 
+2021-05-11_13:15:33.81 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1829; max_evals=6459; steps=44; lbd_min=4.9; lbd_max=49.8; lbd_mean=26.2; R=-1803.0000 
+2021-05-11_13:15:33.93 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1962; max_evals=6459; steps=43; lbd_min=4.5; lbd_max=50.0; lbd_mean=28.2; R=-1936.0000 
+2021-05-11_13:15:34.05 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1917; max_evals=6459; steps=46; lbd_min=1.5; lbd_max=49.3; lbd_mean=25.9; R=-1891.0000 
+2021-05-11_13:15:34.17 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1939; max_evals=6459; steps=50; lbd_min=2.5; lbd_max=49.3; lbd_mean=24.3; R=-1913.0000 
+2021-05-11_13:15:34.28 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1813; max_evals=6459; steps=43; lbd_min=1.4; lbd_max=49.2; lbd_mean=26.7; R=-1787.0000 
+2021-05-11_13:15:34.42 (training) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2069; max_evals=6459; steps=55; lbd_min=2.7; lbd_max=47.2; lbd_mean=23.3; R=-2043.0000 
+2021-05-11_13:15:34.86 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2029; max_evals=6459; steps=49; lbd_min=1.3; lbd_max=48.4; lbd_mean=25.6; R=-2003.0000 
+2021-05-11_13:15:35.00 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2276; max_evals=6459; steps=48; lbd_min=7.7; lbd_max=49.5; lbd_mean=29.6; R=-2250.0000 
+2021-05-11_13:15:35.14 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2286; max_evals=6459; steps=54; lbd_min=1.6; lbd_max=49.8; lbd_mean=26.4; R=-2260.0000 
+2021-05-11_13:15:35.26 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1948; max_evals=6459; steps=54; lbd_min=1.2; lbd_max=49.7; lbd_mean=22.3; R=-1922.0000 
+2021-05-11_13:15:35.40 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2191; max_evals=6459; steps=48; lbd_min=2.0; lbd_max=48.8; lbd_mean=28.4; R=-2165.0000 
+2021-05-11_13:15:35.45 timer evaluate_population: 8.4s 
+2021-05-11_13:15:35.45 #### POPULATION INFO: 1  step:1347 
+2021-05-11_13:15:35.45 Population fitness: [-1794.8333333333333, -2004.6, -2145.4, -1895.5, -2120.0]  step:1347 
+2021-05-11_13:15:35.45 Population improve: [-1794.8333333333333, -2004.6, -2145.4, -1895.5, -2120.0]  step:1347 
+2021-05-11_13:15:35.45 Population var fit: [37763.13888888888, 55308.240000000005, 258058.24000000005, 7341.916666666667, 18283.6]  step:1347 
+2021-05-11_13:15:35.45 Actors hidden size : [[128], [128], [128], [128], [128]]  step:1347 
+2021-05-11_13:15:35.45 Mutation: : [None, None, None, None, None]  step:1347 
+2021-05-11_13:15:35.45 mean_fitness: -1992.0666666666668  step:1347 
+2021-05-11_13:15:35.45 best_fitness: -1794.8333333333333  step:1347 
+2021-05-11_13:15:35.45 best_improve: -1794.8333333333333  step:1347 
+2021-05-11_13:15:35.46 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:1347 
+2021-05-11_13:15:35.46 Best Actors hidden size: [128]  step:1347 
+2021-05-11_13:15:35.56 save population 
+2021-05-11_13:15:35.71 replay memory size: 1347 
+2021-05-11_13:15:35.73 save replay memory 
+2021-05-11_13:15:35.73 ##### select 
+2021-05-11_13:15:35.80 timer select  : 0.1s 
+2021-05-11_13:15:36.12 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1876; max_evals=6459; steps=50; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1850.0000 
+2021-05-11_13:15:36.23 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1651; max_evals=6459; steps=44; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1625.0000 
+2021-05-11_13:15:36.36 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2007; max_evals=6459; steps=53; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1981.0000 
+2021-05-11_13:15:36.49 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1854; max_evals=6459; steps=49; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1828.0000 
+2021-05-11_13:15:36.65 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2342; max_evals=6459; steps=62; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-2316.0000 
+2021-05-11_13:15:36.78 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=1985; max_evals=6459; steps=52; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1959.0000 
+2021-05-11_13:15:36.87 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=1441; max_evals=6459; steps=38; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1415.0000 
+2021-05-11_13:15:37.02 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=2103; max_evals=6459; steps=56; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-2077.0000 
+2021-05-11_13:15:37.13 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=1642; max_evals=6459; steps=44; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1616.0000 
+2021-05-11_13:15:37.26 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=1964; max_evals=6459; steps=52; lbd_min=23.5; lbd_max=23.6; lbd_mean=23.6; R=-1938.0000 
+2021-05-11_13:15:37.26 ##### ELITE INFO 1-step:1347 
+2021-05-11_13:15:37.26 best_test_fitness: -1860.5  step:1347 
+2021-05-11_13:15:37.26 ##### mutation 
+2021-05-11_13:15:37.47 timer mutation: 0.2s 
+2021-05-11_13:15:37.47 ##### END EPOCH 1 - runtime   10.4-step:1347 
+2021-05-11_13:15:37.47 epoch: 1  step:1347 
+2021-05-11_13:15:37.47 ##### ################################################# ##### 
+2021-05-11_13:15:37.87 ##### START EPOCH 2-step:1347 
+2021-05-11_13:15:37.87 ##### evaluate_population 
+2021-05-11_13:15:37.87 start phase-step:1347 
+2021-05-11_13:15:41.77 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1848; max_evals=6459; steps=43; lbd_min=3.6; lbd_max=50.0; lbd_mean=26.9; R=-1822.0000 
+2021-05-11_13:15:41.90 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2024; max_evals=6459; steps=45; lbd_min=2.6; lbd_max=49.5; lbd_mean=27.6; R=-1998.0000 
+2021-05-11_13:15:42.02 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1973; max_evals=6459; steps=49; lbd_min=1.1; lbd_max=47.8; lbd_mean=25.2; R=-1947.0000 
+2021-05-11_13:15:42.15 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2002; max_evals=6459; steps=48; lbd_min=2.3; lbd_max=49.6; lbd_mean=25.9; R=-1976.0000 
+2021-05-11_13:15:42.30 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2316; max_evals=6459; steps=60; lbd_min=1.3; lbd_max=49.2; lbd_mean=24.1; R=-2290.0000 
+2021-05-11_13:15:42.44 (training) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2193; max_evals=6459; steps=45; lbd_min=1.4; lbd_max=49.3; lbd_mean=30.1; R=-2167.0000 
+2021-05-11_13:15:42.90 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2409; max_evals=6459; steps=59; lbd_min=1.2; lbd_max=48.1; lbd_mean=25.4; R=-2383.0000 
+2021-05-11_13:15:43.06 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2503; max_evals=6459; steps=64; lbd_min=2.1; lbd_max=49.4; lbd_mean=24.6; R=-2477.0000 
+2021-05-11_13:15:43.18 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1942; max_evals=6459; steps=48; lbd_min=2.0; lbd_max=49.9; lbd_mean=25.2; R=-1916.0000 
+2021-05-11_13:15:43.34 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2487; max_evals=6459; steps=61; lbd_min=2.0; lbd_max=49.8; lbd_mean=25.8; R=-2461.0000 
+2021-05-11_13:15:43.46 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1894; max_evals=6459; steps=44; lbd_min=1.9; lbd_max=48.5; lbd_mean=27.1; R=-1868.0000 
+2021-05-11_13:15:43.91 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2066; max_evals=6459; steps=54; lbd_min=2.4; lbd_max=49.2; lbd_mean=24.1; R=-2040.0000 
+2021-05-11_13:15:44.03 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1810; max_evals=6459; steps=41; lbd_min=3.0; lbd_max=49.8; lbd_mean=27.3; R=-1784.0000 
+2021-05-11_13:15:44.14 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1730; max_evals=6459; steps=50; lbd_min=1.4; lbd_max=49.2; lbd_mean=21.5; R=-1704.0000 
+2021-05-11_13:15:44.26 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1956; max_evals=6459; steps=47; lbd_min=2.5; lbd_max=49.1; lbd_mean=26.2; R=-1930.0000 
+2021-05-11_13:15:44.38 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1842; max_evals=6459; steps=43; lbd_min=3.5; lbd_max=49.4; lbd_mean=26.6; R=-1816.0000 
+2021-05-11_13:15:44.49 (training) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=1909; max_evals=6459; steps=48; lbd_min=1.8; lbd_max=48.1; lbd_mean=24.5; R=-1883.0000 
+2021-05-11_13:15:45.04 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2472; max_evals=6459; steps=63; lbd_min=1.1; lbd_max=49.0; lbd_mean=24.6; R=-2446.0000 
+2021-05-11_13:15:45.14 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1692; max_evals=6459; steps=42; lbd_min=2.4; lbd_max=49.2; lbd_mean=24.5; R=-1666.0000 
+2021-05-11_13:15:45.28 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2244; max_evals=6459; steps=54; lbd_min=1.5; lbd_max=49.9; lbd_mean=25.4; R=-2218.0000 
+2021-05-11_13:15:45.40 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1838; max_evals=6459; steps=41; lbd_min=2.8; lbd_max=48.9; lbd_mean=27.9; R=-1812.0000 
+2021-05-11_13:15:45.56 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2427; max_evals=6459; steps=64; lbd_min=1.2; lbd_max=49.9; lbd_mean=23.9; R=-2401.0000 
+2021-05-11_13:15:46.00 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1901; max_evals=6459; steps=50; lbd_min=3.3; lbd_max=48.4; lbd_mean=23.7; R=-1875.0000 
+2021-05-11_13:15:46.13 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1956; max_evals=6459; steps=44; lbd_min=1.2; lbd_max=49.4; lbd_mean=28.2; R=-1930.0000 
+2021-05-11_13:15:46.24 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1806; max_evals=6459; steps=42; lbd_min=1.1; lbd_max=50.0; lbd_mean=26.6; R=-1780.0000 
+2021-05-11_13:15:46.37 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1978; max_evals=6459; steps=48; lbd_min=1.6; lbd_max=49.8; lbd_mean=26.3; R=-1952.0000 
+2021-05-11_13:15:46.49 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1784; max_evals=6459; steps=45; lbd_min=1.4; lbd_max=48.1; lbd_mean=24.8; R=-1758.0000 
+2021-05-11_13:15:46.62 (training) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2087; max_evals=6459; steps=53; lbd_min=1.0; lbd_max=46.8; lbd_mean=24.3; R=-2061.0000 
+2021-05-11_13:15:46.68 timer evaluate_population: 8.8s 
+2021-05-11_13:15:46.68 #### POPULATION INFO: 2  step:2742 
+2021-05-11_13:15:46.68 Population fitness: [-2033.3333333333333, -2221.0, -1859.5, -2108.6, -1892.6666666666667]  step:2742 
+2021-05-11_13:15:46.69 Population improve: [-238.5, -101.0, 36.0, -213.0999999999999, -97.83333333333348]  step:2742 
+2021-05-11_13:15:46.69 Population var fit: [23399.222222222223, 73402.8, 11645.916666666666, 99034.24000000002, 10731.888888888889]  step:2742 
+2021-05-11_13:15:46.69 Actors hidden size : [[128], [128], [128], [128], [128]]  step:2742 
+2021-05-11_13:15:46.69 Mutation: : ['activation', 'architecture_new_node', 'architecture_new_node', 'classic_parameter', 'activation']  step:2742 
+2021-05-11_13:15:46.69 mean_fitness: -2023.0199999999998  step:2742 
+2021-05-11_13:15:46.69 best_fitness: -1859.5  step:2742 
+2021-05-11_13:15:46.69 best_improve: 36.0  step:2742 
+2021-05-11_13:15:46.70 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:2742 
+2021-05-11_13:15:46.70 Best Actors hidden size: [128]  step:2742 
+2021-05-11_13:15:46.72 save population 
+2021-05-11_13:15:46.86 replay memory size: 2742 
+2021-05-11_13:15:46.93 save replay memory 
+2021-05-11_13:15:46.93 ##### select 
+2021-05-11_13:15:46.95 timer select  : 0.0s 
+2021-05-11_13:15:47.08 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1850; max_evals=6459; steps=41; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-1824.0000 
+2021-05-11_13:15:47.21 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2000; max_evals=6459; steps=44; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-1974.0000 
+2021-05-11_13:15:47.35 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2144; max_evals=6459; steps=47; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-2118.0000 
+2021-05-11_13:15:47.49 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2128; max_evals=6459; steps=46; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-2102.0000 
+2021-05-11_13:15:47.60 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1677; max_evals=6459; steps=36; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-1651.0000 
+2021-05-11_13:15:47.75 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2474; max_evals=6459; steps=54; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-2448.0000 
+2021-05-11_13:15:47.88 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=1977; max_evals=6459; steps=43; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-1951.0000 
+2021-05-11_13:15:48.01 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=1905; max_evals=6459; steps=42; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-1879.0000 
+2021-05-11_13:15:48.15 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=2218; max_evals=6459; steps=48; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-2192.0000 
+2021-05-11_13:15:48.30 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=2301; max_evals=6459; steps=50; lbd_min=28.7; lbd_max=28.7; lbd_mean=28.7; R=-2275.0000 
+2021-05-11_13:15:48.30 ##### ELITE INFO 2-step:2742 
+2021-05-11_13:15:48.30 best_test_fitness: -2041.4  step:2742 
+2021-05-11_13:15:48.30 ##### mutation 
+2021-05-11_13:15:48.31 timer mutation: 0.0s 
+2021-05-11_13:15:48.31 ##### train 
+2021-05-11_13:21:04.57 timer train   : 316.3s 
+2021-05-11_13:21:04.57 ##### END EPOCH 2 - runtime  326.7-step:2742 
+2021-05-11_13:21:04.57 epoch: 2  step:2742 
+2021-05-11_13:21:04.57 ##### ################################################# ##### 
+2021-05-11_13:21:04.70 ##### START EPOCH 3-step:2742 
+2021-05-11_13:21:04.71 ##### evaluate_population 
+2021-05-11_13:21:04.71 start phase-step:2742 
+2021-05-11_13:21:09.38 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3389; max_evals=6459; steps=77; lbd_min=3.5; lbd_max=49.5; lbd_mean=27.2; R=-3363.0000 
+2021-05-11_13:21:09.49 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1791; max_evals=6459; steps=44; lbd_min=3.2; lbd_max=47.6; lbd_mean=25.0; R=-1765.0000 
+2021-05-11_13:21:09.60 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1913; max_evals=6459; steps=42; lbd_min=1.4; lbd_max=48.4; lbd_mean=27.8; R=-1887.0000 
+2021-05-11_13:21:09.75 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2390; max_evals=6459; steps=56; lbd_min=1.2; lbd_max=50.0; lbd_mean=26.6; R=-2364.0000 
+2021-05-11_13:21:09.88 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2212; max_evals=6459; steps=46; lbd_min=2.9; lbd_max=49.0; lbd_mean=29.5; R=-2186.0000 
+2021-05-11_13:21:10.32 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1791; max_evals=6459; steps=47; lbd_min=1.0; lbd_max=48.8; lbd_mean=24.4; R=-1765.0000 
+2021-05-11_13:21:10.41 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1433; max_evals=6459; steps=34; lbd_min=5.4; lbd_max=46.9; lbd_mean=25.9; R=-1407.0000 
+2021-05-11_13:21:10.55 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2314; max_evals=6459; steps=53; lbd_min=1.6; lbd_max=49.7; lbd_mean=27.4; R=-2288.0000 
+2021-05-11_13:21:10.66 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1941; max_evals=6459; steps=47; lbd_min=1.6; lbd_max=48.9; lbd_mean=25.8; R=-1915.0000 
+2021-05-11_13:21:10.77 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1673; max_evals=6459; steps=43; lbd_min=1.8; lbd_max=49.8; lbd_mean=24.6; R=-1647.0000 
+2021-05-11_13:21:10.92 (training) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2505; max_evals=6459; steps=62; lbd_min=1.9; lbd_max=48.9; lbd_mean=25.3; R=-2479.0000 
+2021-05-11_13:21:11.37 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2112; max_evals=6459; steps=57; lbd_min=1.6; lbd_max=49.9; lbd_mean=22.9; R=-2086.0000 
+2021-05-11_13:21:11.48 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1705; max_evals=6459; steps=46; lbd_min=1.9; lbd_max=49.0; lbd_mean=23.0; R=-1679.0000 
+2021-05-11_13:21:11.61 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2227; max_evals=6459; steps=52; lbd_min=1.1; lbd_max=49.9; lbd_mean=26.5; R=-2201.0000 
+2021-05-11_13:21:11.78 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2721; max_evals=6459; steps=74; lbd_min=1.6; lbd_max=49.4; lbd_mean=23.1; R=-2695.0000 
+2021-05-11_13:21:11.89 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1681; max_evals=6459; steps=46; lbd_min=2.3; lbd_max=48.7; lbd_mean=22.7; R=-1655.0000 
+2021-05-11_13:21:12.42 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2388; max_evals=6459; steps=61; lbd_min=1.2; lbd_max=50.0; lbd_mean=24.4; R=-2362.0000 
+2021-05-11_13:21:12.55 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2032; max_evals=6459; steps=45; lbd_min=2.5; lbd_max=49.2; lbd_mean=28.2; R=-2006.0000 
+2021-05-11_13:21:12.65 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1546; max_evals=6459; steps=39; lbd_min=2.1; lbd_max=47.8; lbd_mean=25.2; R=-1520.0000 
+2021-05-11_13:21:12.80 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2381; max_evals=6459; steps=60; lbd_min=1.8; lbd_max=49.6; lbd_mean=24.9; R=-2355.0000 
+2021-05-11_13:21:12.93 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2002; max_evals=6459; steps=49; lbd_min=1.1; lbd_max=49.1; lbd_mean=25.6; R=-1976.0000 
+2021-05-11_13:21:13.44 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2525; max_evals=6459; steps=69; lbd_min=2.8; lbd_max=48.2; lbd_mean=22.8; R=-2499.0000 
+2021-05-11_13:21:13.56 (training) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=1894; max_evals=6459; steps=44; lbd_min=3.1; lbd_max=49.5; lbd_mean=27.1; R=-1868.0000 
+2021-05-11_13:21:13.69 (training) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=1950; max_evals=6459; steps=54; lbd_min=2.7; lbd_max=49.9; lbd_mean=22.8; R=-1924.0000 
+2021-05-11_13:21:13.83 (training) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2460; max_evals=6459; steps=59; lbd_min=2.2; lbd_max=49.3; lbd_mean=25.9; R=-2434.0000 
+2021-05-11_13:21:13.97 (training) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2179; max_evals=6459; steps=53; lbd_min=1.5; lbd_max=49.3; lbd_mean=25.6; R=-2153.0000 
+2021-05-11_13:21:14.03 timer evaluate_population: 9.3s 
+2021-05-11_13:21:14.03 #### POPULATION INFO: 3  step:4101 
+2021-05-11_13:21:14.03 Population fitness: [-2313.0, -1916.8333333333333, -2063.2, -2043.8, -2175.6]  step:4101 
+2021-05-11_13:21:14.03 Population improve: [-453.5, -24.166666666666515, -170.53333333333308, -184.29999999999995, -316.0999999999999]  step:4101 
+2021-05-11_13:21:14.04 Population var fit: [320602.0, 134932.13888888888, 146583.36000000002, 95697.75999999998, 65957.84]  step:4101 
+2021-05-11_13:21:14.04 Actors hidden size : [[192], [128], [128], [192], [192]]  step:4101 
+2021-05-11_13:21:14.04 Mutation: : ['architecture_new_node', 'activation', 'no_mutation', 'no_mutation', 'classic_parameter']  step:4101 
+2021-05-11_13:21:14.04 mean_fitness: -2102.4866666666667  step:4101 
+2021-05-11_13:21:14.04 best_fitness: -1916.8333333333333  step:4101 
+2021-05-11_13:21:14.04 best_improve: -24.166666666666515  step:4101 
+2021-05-11_13:21:14.05 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:4101 
+2021-05-11_13:21:14.05 Best Actors hidden size: [128]  step:4101 
+2021-05-11_13:21:15.47 save population 
+2021-05-11_13:21:15.66 replay memory size: 4101 
+2021-05-11_13:21:15.85 save replay memory 
+2021-05-11_13:21:15.87 ##### select 
+2021-05-11_13:21:15.90 timer select  : 0.0s 
+2021-05-11_13:21:17.68 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2890; max_evals=6459; steps=2760; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-2864.0000 
+2021-05-11_13:21:20.00 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=3830; max_evals=6459; steps=3650; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-3804.0000 
+2021-05-11_13:21:21.51 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2493; max_evals=6459; steps=2384; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-2467.0000 
+2021-05-11_13:21:23.14 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2683; max_evals=6459; steps=2562; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-2657.0000 
+2021-05-11_13:21:25.85 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=4338; max_evals=6459; steps=4172; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-4312.0000 
+2021-05-11_13:21:27.42 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2601; max_evals=6459; steps=2464; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-2575.0000 
+2021-05-11_13:21:28.94 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=2505; max_evals=6459; steps=2385; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-2479.0000 
+2021-05-11_13:21:31.95 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=4969; max_evals=6459; steps=4717; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.1; R=-4943.0000 
+2021-05-11_13:21:34.04 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=3415; max_evals=6459; steps=3272; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-3389.0000 
+2021-05-11_13:21:35.02 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=1606; max_evals=6459; steps=1529; lbd_min=1.0; lbd_max=1.1; lbd_mean=1.0; R=-1580.0000 
+2021-05-11_13:21:35.05 ##### ELITE INFO 3-step:4101 
+2021-05-11_13:21:35.05 best_test_fitness: -3107.0  step:4101 
+2021-05-11_13:21:35.05 ##### mutation 
+2021-05-11_13:21:35.08 timer mutation: 0.0s 
+2021-05-11_13:21:35.08 ##### train 
+2021-05-11_13:26:42.12 timer train   : 307.0s 
+2021-05-11_13:26:42.13 ##### END EPOCH 3 - runtime  337.4-step:4101 
+2021-05-11_13:26:42.13 epoch: 3  step:4101 
+2021-05-11_13:26:42.13 ##### ################################################# ##### 
+2021-05-11_13:26:42.20 ##### START EPOCH 4-step:4101 
+2021-05-11_13:26:42.20 ##### evaluate_population 
+2021-05-11_13:26:50.09 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2825; max_evals=6459; steps=2806; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2799.0000 
+2021-05-11_13:26:52.20 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2562; max_evals=6459; steps=2560; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2536.0000 
+2021-05-11_13:26:54.11 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2262; max_evals=6459; steps=2256; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2236.0000 
+2021-05-11_13:26:55.45 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1471; max_evals=6459; steps=1470; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1445.0000 
+2021-05-11_13:26:59.22 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=4902; max_evals=6459; steps=4898; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4876.0000 
+2021-05-11_13:26:59.79 timer evaluate_population: 17.6s 
+2021-05-11_13:26:59.79 #### POPULATION INFO: 4  step:18091 
+2021-05-11_13:26:59.79 Population fitness: [-2799.0, -2536.0, -2236.0, -1445.0, -4876.0]  step:18091 
+2021-05-11_13:26:59.79 Population improve: [-882.1666666666667, -619.1666666666667, -319.16666666666674, 471.83333333333326, -2832.2]  step:18091 
+2021-05-11_13:26:59.79 Population var fit: [0.0, 0.0, 0.0, 0.0, 0.0]  step:18091 
+2021-05-11_13:26:59.79 Actors hidden size : [[128], [128], [128], [128], [192]]  step:18091 
+2021-05-11_13:26:59.79 Mutation: : ['classic_parameter', 'architecture_new_node', 'rl_lr_critic', 'architecture_new_node', 'classic_parameter']  step:18091 
+2021-05-11_13:26:59.80 mean_fitness: -2778.4  step:18091 
+2021-05-11_13:26:59.80 best_fitness: -1445.0  step:18091 
+2021-05-11_13:26:59.80 best_improve: 471.83333333333326  step:18091 
+2021-05-11_13:26:59.80 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:18091 
+2021-05-11_13:26:59.80 Best Actors hidden size: [128]  step:18091 
+2021-05-11_13:26:59.81 save population 
+2021-05-11_13:27:00.80 replay memory size: 18091 
+2021-05-11_13:27:01.19 save replay memory 
+2021-05-11_13:27:01.20 ##### select 
+2021-05-11_13:27:01.22 timer select  : 0.0s 
+2021-05-11_13:27:02.90 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2634; max_evals=6459; steps=2633; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2608.0000 
+2021-05-11_13:27:05.51 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=4112; max_evals=6459; steps=4110; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4086.0000 
+2021-05-11_13:27:07.83 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=3667; max_evals=6459; steps=3663; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3641.0000 
+2021-05-11_13:27:09.20 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2162; max_evals=6459; steps=2160; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2136.0000 
+2021-05-11_13:27:10.77 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2477; max_evals=6459; steps=2476; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2451.0000 
+2021-05-11_13:27:12.67 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2994; max_evals=6459; steps=2992; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2968.0000 
+2021-05-11_13:27:14.22 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=2454; max_evals=6459; steps=2453; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2428.0000 
+2021-05-11_13:27:15.29 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=1685; max_evals=6459; steps=1684; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1659.0000 
+2021-05-11_13:27:17.30 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=3178; max_evals=6459; steps=3177; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3152.0000 
+2021-05-11_13:27:18.73 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=2260; max_evals=6459; steps=2259; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2234.0000 
+2021-05-11_13:27:18.75 ##### ELITE INFO 4-step:18091 
+2021-05-11_13:27:18.76 best_test_fitness: -2736.3  step:18091 
+2021-05-11_13:27:18.76 ##### mutation 
+2021-05-11_13:27:18.77 timer mutation: 0.0s 
+2021-05-11_13:27:18.77 ##### train 
+2021-05-11_14:20:37.95 timer train   : 3199.2s 
+2021-05-11_14:20:40.16 ##### END EPOCH 4 - runtime 3238.0-step:18091 
+2021-05-11_14:20:40.16 epoch: 4  step:18091 
+2021-05-11_14:20:40.16 ##### ################################################# ##### 
+2021-05-11_14:20:43.83 ##### START EPOCH 5-step:18091 
+2021-05-11_14:20:43.83 ##### evaluate_population 
+2021-05-11_14:20:52.24 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3114; max_evals=6459; steps=3113; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3088.0000 
+2021-05-11_14:20:54.15 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2152; max_evals=6459; steps=2151; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2126.0000 
+2021-05-11_14:20:58.02 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=5090; max_evals=6459; steps=5089; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-5064.0000 
+2021-05-11_14:21:00.55 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2980; max_evals=6459; steps=2979; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2954.0000 
+2021-05-11_14:21:03.29 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3561; max_evals=6459; steps=3560; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3535.0000 
+2021-05-11_14:21:03.91 timer evaluate_population: 20.1s 
+2021-05-11_14:21:03.91 #### POPULATION INFO: 5  step:34983 
+2021-05-11_14:21:03.92 Population fitness: [-3088.0, -2126.0, -5064.0, -2954.0, -3535.0]  step:34983 
+2021-05-11_14:21:03.92 Population improve: [-1643.0, -681.0, -3619.0, -1509.0, -2090.0]  step:34983 
+2021-05-11_14:21:03.92 Population var fit: [0.0, 0.0, 0.0, 0.0, 0.0]  step:34983 
+2021-05-11_14:21:03.92 Actors hidden size : [[192], [192], [192], [192], [192]]  step:34983 
+2021-05-11_14:21:03.93 Mutation: : ['activation', 'no_mutation', 'activation', 'rl_td3_policy_noise', 'activation']  step:34983 
+2021-05-11_14:21:03.93 mean_fitness: -3353.4  step:34983 
+2021-05-11_14:21:03.93 best_fitness: -2126.0  step:34983 
+2021-05-11_14:21:03.93 best_improve: -681.0  step:34983 
+2021-05-11_14:21:03.93 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:34983 
+2021-05-11_14:21:03.94 Best Actors hidden size: [192]  step:34983 
+2021-05-11_14:21:09.68 save population 
+2021-05-11_14:21:11.52 replay memory size: 34983 
+2021-05-11_14:21:14.06 save replay memory 
+2021-05-11_14:21:14.07 ##### select 
+2021-05-11_14:21:14.10 timer select  : 0.0s 
+2021-05-11_14:21:17.36 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=5218; max_evals=6459; steps=5217; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-5192.0000 
+2021-05-11_14:21:18.79 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2283; max_evals=6459; steps=2282; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2257.0000 
+2021-05-11_14:21:20.11 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2108; max_evals=6459; steps=2107; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2082.0000 
+2021-05-11_14:21:21.65 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=2456; max_evals=6459; steps=2455; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2430.0000 
+2021-05-11_14:21:23.91 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=3545; max_evals=6459; steps=3544; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3519.0000 
+2021-05-11_14:21:25.55 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=2633; max_evals=6459; steps=2632; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2607.0000 
+2021-05-11_14:21:26.59 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=1668; max_evals=6459; steps=1667; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1642.0000 
+2021-05-11_14:21:27.67 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=1729; max_evals=6459; steps=1728; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1703.0000 
+2021-05-11_14:21:28.84 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=1878; max_evals=6459; steps=1877; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1852.0000 
+2021-05-11_14:21:31.18 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=3752; max_evals=6459; steps=3751; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3726.0000 
+2021-05-11_14:21:31.20 ##### ELITE INFO 5-step:34983 
+2021-05-11_14:21:31.21 best_test_fitness: -2701.0  step:34983 
+2021-05-11_14:21:31.21 ##### mutation 
+2021-05-11_14:21:31.22 timer mutation: 0.0s 
+2021-05-11_14:21:31.22 ##### train 
+2021-05-11_15:26:35.97 timer train   : 3904.7s 
+2021-05-11_15:26:36.21 ##### END EPOCH 5 - runtime 3952.4-step:34983 
+2021-05-11_15:26:36.21 epoch: 5  step:34983 
+2021-05-11_15:26:36.22 ##### ################################################# ##### 
+2021-05-11_15:26:36.41 ##### START EPOCH 6-step:34983 
+2021-05-11_15:26:36.41 ##### evaluate_population 
+2021-05-11_15:27:04.70 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=4666; max_evals=6459; steps=4665; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4640.0000 
+2021-05-11_15:27:09.09 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=4396; max_evals=6459; steps=4395; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4370.0000 
+2021-05-11_15:27:14.03 (training) Episode done: ep=1; n=500; obj=499; init_obj=475; evals=6459; max_evals=6459; steps=6458; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-6434.0000 
+2021-05-11_15:27:16.06 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2184; max_evals=6459; steps=2183; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2158.0000 
+2021-05-11_15:27:18.54 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3138; max_evals=6459; steps=3137; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3112.0000 
+2021-05-11_15:27:19.24 timer evaluate_population: 42.8s 
+2021-05-11_15:27:19.24 #### POPULATION INFO: 6  step:55821 
+2021-05-11_15:27:19.25 Population fitness: [-4640.0, -4370.0, -6434.0, -2158.0, -3112.0]  step:55821 
+2021-05-11_15:27:19.25 Population improve: [-2514.0, -2244.0, -3346.0, -32.0, -986.0]  step:55821 
+2021-05-11_15:27:19.25 Population var fit: [0.0, 0.0, 0.0, 0.0, 0.0]  step:55821 
+2021-05-11_15:27:19.25 Actors hidden size : [[192], [192], [192], [192], [192]]  step:55821 
+2021-05-11_15:27:19.25 Mutation: : ['rl_lr_critic', 'architecture_new_node', 'rl_lr_actor', 'activation', 'classic_parameter']  step:55821 
+2021-05-11_15:27:19.25 mean_fitness: -4142.8  step:55821 
+2021-05-11_15:27:19.25 best_fitness: -2158.0  step:55821 
+2021-05-11_15:27:19.25 best_improve: -32.0  step:55821 
+2021-05-11_15:27:19.25 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:55821 
+2021-05-11_15:27:19.26 Best Actors hidden size: [192]  step:55821 
+2021-05-11_15:27:19.49 save population 
+2021-05-11_15:27:22.56 replay memory size: 55821 
+2021-05-11_15:27:23.71 save replay memory 
+2021-05-11_15:27:23.71 ##### select 
+2021-05-11_15:27:23.90 timer select  : 0.2s 
+2021-05-11_15:27:26.36 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3815; max_evals=6459; steps=3814; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3789.0000 
+2021-05-11_15:27:28.29 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=3029; max_evals=6459; steps=3028; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3003.0000 
+2021-05-11_15:27:30.03 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2739; max_evals=6459; steps=2738; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2713.0000 
+2021-05-11_15:27:32.24 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=3436; max_evals=6459; steps=3435; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3410.0000 
+2021-05-11_15:27:34.43 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=3352; max_evals=6459; steps=3351; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3326.0000 
+2021-05-11_15:27:36.35 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=3038; max_evals=6459; steps=3037; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3012.0000 
+2021-05-11_15:27:38.43 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=3304; max_evals=6459; steps=3303; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3278.0000 
+2021-05-11_15:27:39.46 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=1627; max_evals=6459; steps=1626; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1601.0000 
+2021-05-11_15:27:41.63 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=3418; max_evals=6459; steps=3417; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3392.0000 
+2021-05-11_15:27:43.23 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=2525; max_evals=6459; steps=2524; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2499.0000 
+2021-05-11_15:27:43.25 ##### ELITE INFO 6-step:55821 
+2021-05-11_15:27:43.26 best_test_fitness: -3002.3  step:55821 
+2021-05-11_15:27:43.26 ##### mutation 
+2021-05-11_15:27:43.38 timer mutation: 0.1s 
+2021-05-11_15:27:43.38 ##### train 
+2021-05-11_16:54:11.10 timer train   : 5187.7s 
+2021-05-11_16:54:11.13 ##### END EPOCH 6 - runtime 5254.7-step:55821 
+2021-05-11_16:54:11.15 epoch: 6  step:55821 
+2021-05-11_16:54:11.17 ##### ################################################# ##### 
+2021-05-11_16:54:11.27 ##### START EPOCH 7-step:55821 
+2021-05-11_16:54:11.27 ##### evaluate_population 
+2021-05-11_16:54:27.24 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=4367; max_evals=6459; steps=4366; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4341.0000 
+2021-05-11_16:54:29.22 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2254; max_evals=6459; steps=2253; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2228.0000 
+2021-05-11_16:54:31.53 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2529; max_evals=6459; steps=2528; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2503.0000 
+2021-05-11_16:54:33.19 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1949; max_evals=6459; steps=1948; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1923.0000 
+2021-05-11_16:54:35.88 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3465; max_evals=6459; steps=3464; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3439.0000 
+2021-05-11_16:54:36.44 timer evaluate_population: 25.2s 
+2021-05-11_16:54:36.44 #### POPULATION INFO: 7  step:70380 
+2021-05-11_16:54:36.45 Population fitness: [-4341.0, -2228.0, -2503.0, -1923.0, -3439.0]  step:70380 
+2021-05-11_16:54:36.45 Population improve: [-2183.0, -70.0, -345.0, 235.0, -1281.0]  step:70380 
+2021-05-11_16:54:36.45 Population var fit: [0.0, 0.0, 0.0, 0.0, 0.0]  step:70380 
+2021-05-11_16:54:36.45 Actors hidden size : [[192], [192], [192], [192], [192]]  step:70380 
+2021-05-11_16:54:36.45 Mutation: : ['classic_parameter', 'classic_parameter', 'architecture_new_layer', 'architecture_new_node', 'activation']  step:70380 
+2021-05-11_16:54:36.45 mean_fitness: -2886.8  step:70380 
+2021-05-11_16:54:36.45 best_fitness: -1923.0  step:70380 
+2021-05-11_16:54:36.45 best_improve: 235.0  step:70380 
+2021-05-11_16:54:36.46 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:70380 
+2021-05-11_16:54:36.46 Best Actors hidden size: [192]  step:70380 
+2021-05-11_16:54:51.31 save population 
+2021-05-11_16:58:54.89 replay memory size: 70380 
+2021-05-11_16:58:56.39 save replay memory 
+2021-05-11_16:58:56.40 ##### select 
+2021-05-11_16:58:56.42 timer select  : 0.0s 
+2021-05-11_16:59:13.89 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2920; max_evals=6459; steps=2919; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2894.0000 
+2021-05-11_16:59:16.38 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=3939; max_evals=6459; steps=3938; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3913.0000 
+2021-05-11_16:59:18.25 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2848; max_evals=6459; steps=2847; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2822.0000 
+2021-05-11_16:59:21.80 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=5593; max_evals=6459; steps=5592; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-5567.0000 
+2021-05-11_16:59:23.20 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2215; max_evals=6459; steps=2214; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2189.0000 
+2021-05-11_16:59:25.71 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=3982; max_evals=6459; steps=3981; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3956.0000 
+2021-05-11_16:59:27.10 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=2197; max_evals=6459; steps=2196; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2171.0000 
+2021-05-11_16:59:28.93 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=2897; max_evals=6459; steps=2896; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2871.0000 
+2021-05-11_16:59:30.98 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=3213; max_evals=6459; steps=3212; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3187.0000 
+2021-05-11_16:59:32.54 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=2471; max_evals=6459; steps=2470; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2445.0000 
+2021-05-11_16:59:32.57 ##### ELITE INFO 7-step:70380 
+2021-05-11_16:59:32.57 best_test_fitness: -3201.5  step:70380 
+2021-05-11_16:59:32.57 ##### mutation 
+2021-05-11_16:59:50.36 timer mutation: 17.8s 
+2021-05-11_16:59:52.08 ##### train 
+2021-05-11_17:54:55.12 timer train   : 3303.0s 
+2021-05-11_17:54:55.12 ##### END EPOCH 7 - runtime 3643.9-step:70380 
+2021-05-11_17:54:55.13 epoch: 7  step:70380 
+2021-05-11_17:54:55.13 ##### ################################################# ##### 
+2021-05-11_17:54:55.27 ##### START EPOCH 8-step:70380 
+2021-05-11_17:54:55.28 ##### evaluate_population 
+2021-05-11_17:55:09.54 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1887; max_evals=6459; steps=1886; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1861.0000 
+2021-05-11_17:55:11.67 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2634; max_evals=6459; steps=2633; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2608.0000 
+2021-05-11_17:55:16.34 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=5960; max_evals=6459; steps=5959; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-5934.0000 
+2021-05-11_17:55:18.50 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2481; max_evals=6459; steps=2480; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2455.0000 
+2021-05-11_17:55:20.55 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2404; max_evals=6459; steps=2403; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2378.0000 
+2021-05-11_17:55:21.07 timer evaluate_population: 25.8s 
+2021-05-11_17:55:21.07 #### POPULATION INFO: 8  step:85741 
+2021-05-11_17:55:21.07 Population fitness: [-1861.0, -2608.0, -5934.0, -2455.0, -2378.0]  step:85741 
+2021-05-11_17:55:21.07 Population improve: [62.0, -685.0, -4011.0, -532.0, -455.0]  step:85741 
+2021-05-11_17:55:21.07 Population var fit: [0.0, 0.0, 0.0, 0.0, 0.0]  step:85741 
+2021-05-11_17:55:21.07 Actors hidden size : [[256], [256], [256], [256], [256]]  step:85741 
+2021-05-11_17:55:21.08 Mutation: : ['activation', 'classic_parameter', 'no_mutation', 'rl_lr_actor', 'activation']  step:85741 
+2021-05-11_17:55:21.08 mean_fitness: -3047.2  step:85741 
+2021-05-11_17:55:21.08 best_fitness: -1861.0  step:85741 
+2021-05-11_17:55:21.08 best_improve: 62.0  step:85741 
+2021-05-11_17:55:21.08 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:85741 
+2021-05-11_17:55:21.08 Best Actors hidden size: [256]  step:85741 
+2021-05-11_17:55:21.11 save population 
+2021-05-11_17:55:26.09 replay memory size: 85741 
+2021-05-11_17:55:28.04 save replay memory 
+2021-05-11_17:55:28.04 ##### select 
+2021-05-11_17:55:28.06 timer select  : 0.0s 
+2021-05-11_17:55:30.31 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3486; max_evals=6459; steps=3485; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3460.0000 
+2021-05-11_17:55:32.00 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2644; max_evals=6459; steps=2643; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2618.0000 
+2021-05-11_17:55:33.64 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=2541; max_evals=6459; steps=2540; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2515.0000 
+2021-05-11_17:55:35.96 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=3626; max_evals=6459; steps=3625; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3600.0000 
+2021-05-11_17:55:37.19 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=1936; max_evals=6459; steps=1935; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1910.0000 
+2021-05-11_17:55:39.39 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=3428; max_evals=6459; steps=3427; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3402.0000 
+2021-05-11_17:55:43.52 (evaluate) Episode done: ep=7; n=500; obj=499; init_obj=475; evals=6459; max_evals=6459; steps=6458; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-6434.0000 
+2021-05-11_17:55:44.62 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=1717; max_evals=6459; steps=1716; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1691.0000 
+2021-05-11_17:55:46.43 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=2827; max_evals=6459; steps=2826; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2801.0000 
+2021-05-11_17:55:47.67 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=1938; max_evals=6459; steps=1937; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1912.0000 
+2021-05-11_17:55:47.69 ##### ELITE INFO 8-step:85741 
+2021-05-11_17:55:47.69 best_test_fitness: -3034.3  step:85741 
+2021-05-11_17:55:47.70 ##### mutation 
+2021-05-11_17:55:47.72 timer mutation: 0.0s 
+2021-05-11_17:55:47.72 ##### train 
+2021-05-11_18:53:34.55 timer train   : 3466.8s 
+2021-05-11_18:53:34.61 ##### END EPOCH 8 - runtime 3519.3-step:85741 
+2021-05-11_18:53:34.61 epoch: 8  step:85741 
+2021-05-11_18:53:34.61 ##### ################################################# ##### 
+2021-05-11_18:53:34.84 ##### START EPOCH 9-step:85741 
+2021-05-11_18:53:34.84 ##### evaluate_population 
+2021-05-11_18:53:41.50 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=1599; max_evals=6459; steps=1598; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1573.0000 
+2021-05-11_18:53:43.45 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2266; max_evals=6459; steps=2265; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2240.0000 
+2021-05-11_18:53:45.65 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2724; max_evals=6459; steps=2723; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2698.0000 
+2021-05-11_18:53:47.88 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2740; max_evals=6459; steps=2739; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2714.0000 
+2021-05-11_18:53:50.07 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2659; max_evals=6459; steps=2658; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2633.0000 
+2021-05-11_18:53:50.50 timer evaluate_population: 15.7s 
+2021-05-11_18:53:50.50 #### POPULATION INFO: 9  step:97724 
+2021-05-11_18:53:50.50 Population fitness: [-1573.0, -2240.0, -2698.0, -2714.0, -2633.0]  step:97724 
+2021-05-11_18:53:50.50 Population improve: [288.0, -379.0, -837.0, -336.0, -255.0]  step:97724 
+2021-05-11_18:53:50.50 Population var fit: [0.0, 0.0, 0.0, 0.0, 0.0]  step:97724 
+2021-05-11_18:53:50.50 Actors hidden size : [[256], [256], [256], [256], [256]]  step:97724 
+2021-05-11_18:53:50.50 Mutation: : ['no_mutation', 'classic_parameter', 'classic_parameter', 'classic_parameter', 'architecture_new_node']  step:97724 
+2021-05-11_18:53:50.51 mean_fitness: -2371.6  step:97724 
+2021-05-11_18:53:50.51 best_fitness: -1573.0  step:97724 
+2021-05-11_18:53:50.51 best_improve: 288.0  step:97724 
+2021-05-11_18:53:50.51 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 1000, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:97724 
+2021-05-11_18:53:50.51 Best Actors hidden size: [256]  step:97724 
+2021-05-11_18:53:50.54 save population 
+2021-05-11_18:53:56.32 replay memory size: 97724 
+2021-05-11_18:53:58.38 save replay memory 
+2021-05-11_18:53:58.38 ##### select 
+2021-05-11_18:53:58.41 timer select  : 0.0s 
+2021-05-11_18:54:00.16 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2796; max_evals=6459; steps=2795; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2770.0000 
+2021-05-11_18:54:02.59 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=3898; max_evals=6459; steps=3897; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3872.0000 
+2021-05-11_18:54:04.59 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=3199; max_evals=6459; steps=3198; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3173.0000 
+2021-05-11_18:54:05.69 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=1760; max_evals=6459; steps=1759; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-1734.0000 
+2021-05-11_18:54:07.51 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=2915; max_evals=6459; steps=2914; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2889.0000 
+2021-05-11_18:54:09.94 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=3908; max_evals=6459; steps=3907; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3882.0000 
+2021-05-11_18:54:11.45 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=2415; max_evals=6459; steps=2414; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2389.0000 
+2021-05-11_18:54:12.98 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=2430; max_evals=6459; steps=2429; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2404.0000 
+2021-05-11_18:54:14.79 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=2884; max_evals=6459; steps=2883; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2858.0000 
+2021-05-11_18:54:16.48 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=2702; max_evals=6459; steps=2701; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2676.0000 
+2021-05-11_18:54:16.50 ##### ELITE INFO 9-step:97724 
+2021-05-11_18:54:16.50 best_test_fitness: -2864.7  step:97724 
+2021-05-11_18:54:16.51 ##### mutation 
+2021-05-11_18:54:16.52 timer mutation: 0.0s 
+2021-05-11_18:54:16.52 ##### train 
+2021-05-11_19:39:31.76 timer train   : 2715.2s 
+2021-05-11_19:39:32.15 ##### END EPOCH 9 - runtime 2757.3-step:97724 
+2021-05-11_19:39:32.15 epoch: 9  step:97724 
+2021-05-11_19:39:32.15 ##### ################################################# ##### 
+2021-05-11_19:39:33.05 ##### START EPOCH 10-step:97724 
+2021-05-11_19:39:33.06 ##### evaluate_population 
+2021-05-11_19:39:46.91 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3015; max_evals=6459; steps=3014; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2989.0000 
+2021-05-11_19:39:49.20 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2807; max_evals=6459; steps=2806; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2781.0000 
+2021-05-11_19:39:52.07 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=3672; max_evals=6459; steps=3671; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3646.0000 
+2021-05-11_19:39:54.68 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2992; max_evals=6459; steps=2991; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2966.0000 
+2021-05-11_19:39:58.47 (training) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=4898; max_evals=6459; steps=4897; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4872.0000 
+2021-05-11_19:39:59.12 timer evaluate_population: 26.1s 
+2021-05-11_19:39:59.13 #### POPULATION INFO: 10  step:115103 
+2021-05-11_19:39:59.13 Population fitness: [-2989.0, -2781.0, -3646.0, -2966.0, -4872.0]  step:115103 
+2021-05-11_19:39:59.13 Population improve: [-1416.0, -1208.0, -2073.0, -1393.0, -3299.0]  step:115103 
+2021-05-11_19:39:59.13 Population var fit: [0.0, 0.0, 0.0, 0.0, 0.0]  step:115103 
+2021-05-11_19:39:59.13 Actors hidden size : [[256], [256], [256], [256], [256]]  step:115103 
+2021-05-11_19:39:59.13 Mutation: : ['architecture_new_node', 'rl_batch_size', 'classic_parameter', 'no_mutation', 'no_mutation']  step:115103 
+2021-05-11_19:39:59.13 mean_fitness: -3450.8  step:115103 
+2021-05-11_19:39:59.13 best_fitness: -2781.0  step:115103 
+2021-05-11_19:39:59.14 best_improve: -1208.0  step:115103 
+2021-05-11_19:39:59.14 best rl config: {'train_frames_fraction': 0.2, 'gamma': 0.99, 'tau': 0.005, 'batch_size': 128.0, 'lr_actor': 0.001, 'lr_critic': 0.001, 'clip_grad_norm': 100, 'td3_policy_noise': 0.2, 'td3_noise_clip': 0.5, 'td3_update_freq': 2, 'optimizer': 'adam', 'start_timesteps': 3000}  step:115103 
+2021-05-11_19:39:59.14 Best Actors hidden size: [256]  step:115103 
+2021-05-11_19:39:59.17 save population 
+2021-05-11_19:40:06.12 replay memory size: 115103 
+2021-05-11_19:40:08.85 save replay memory 
+2021-05-11_19:40:08.85 ##### select 
+2021-05-11_19:40:08.88 timer select  : 0.0s 
+2021-05-11_19:40:10.21 (evaluate) Episode done: ep=1; n=500; obj=500; init_obj=475; evals=2050; max_evals=6459; steps=2049; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2024.0000 
+2021-05-11_19:40:11.84 (evaluate) Episode done: ep=2; n=500; obj=500; init_obj=475; evals=2519; max_evals=6459; steps=2518; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-2493.0000 
+2021-05-11_19:40:14.99 (evaluate) Episode done: ep=3; n=500; obj=500; init_obj=475; evals=4871; max_evals=6459; steps=4870; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4845.0000 
+2021-05-11_19:40:18.14 (evaluate) Episode done: ep=4; n=500; obj=500; init_obj=475; evals=4854; max_evals=6459; steps=4853; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4828.0000 
+2021-05-11_19:40:20.43 (evaluate) Episode done: ep=5; n=500; obj=500; init_obj=475; evals=3554; max_evals=6459; steps=3553; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3528.0000 
+2021-05-11_19:40:24.56 (evaluate) Episode done: ep=6; n=500; obj=500; init_obj=475; evals=6373; max_evals=6459; steps=6372; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-6347.0000 
+2021-05-11_19:40:26.56 (evaluate) Episode done: ep=7; n=500; obj=500; init_obj=475; evals=3088; max_evals=6459; steps=3087; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3062.0000 
+2021-05-11_19:40:28.67 (evaluate) Episode done: ep=8; n=500; obj=500; init_obj=475; evals=3247; max_evals=6459; steps=3246; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3221.0000 
+2021-05-11_19:40:30.66 (evaluate) Episode done: ep=9; n=500; obj=500; init_obj=475; evals=3085; max_evals=6459; steps=3084; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-3059.0000 
+2021-05-11_19:40:33.45 (evaluate) Episode done: ep=10; n=500; obj=500; init_obj=475; evals=4284; max_evals=6459; steps=4283; lbd_min=1.0; lbd_max=1.0; lbd_mean=1.0; R=-4258.0000 
+2021-05-11_19:40:33.48 ##### ELITE INFO 10-step:115103 
+2021-05-11_19:40:33.49 best_test_fitness: -3766.5  step:115103 
+2021-05-11_19:40:33.49 ##### mutation 
+2021-05-11_19:40:33.50 timer mutation: 0.0s 
+2021-05-11_19:40:33.51 ##### train 

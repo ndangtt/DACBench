@@ -1,0 +1,116 @@
+actor: !!python/object:searl.utils.handler.config.AttributeDict
+  activation: relu
+  hidden_size:
+  - 50
+  - 50
+  layer_norm: true
+  output_activation: tanh
+  output_vanish: false
+bench: !!python/object:searl.utils.handler.config.AttributeDict
+  action_space_args:
+  - - 1
+  - - 50
+  base_config_name: lbd_theory
+  init_solution_ratio: 0.95
+  instance_set_path: onemax_500
+  name: dacbench.benchmarks.onell_benchmark.OneLLBenchmark
+  reward_choice: imp_minus_evals
+critic: !!python/object:searl.utils.handler.config.AttributeDict
+  activation: relu
+  hidden_size:
+  - 50
+  - 50
+  layer_norm: true
+  output_activation: linear
+  output_vanish: true
+eval: !!python/object:searl.utils.handler.config.AttributeDict
+  eval_episodes: 1
+  exploration_noise: 0
+  min_eval_steps: 250
+  test_episodes: 10
+  test_seed: 123
+expt: !!python/object:searl.utils.handler.config.AttributeDict
+  experiment_name: ''
+  experiments_dir: test-cluster/06
+  project_name: ''
+  session_name: ''
+mutation: !!python/object:searl.utils.handler.config.AttributeDict
+  activation: 0.2
+  architecture: 0.2
+  mutation_sd: 0.1
+  new_layer_prob: 0.2
+  no_mutation: 0.2
+  parameters: 0.2
+  rl_hp_ranges: !!python/object:searl.utils.handler.config.AttributeDict
+    batch_size:
+    - 128
+    - 4096
+    lr_actor:
+    - 1.0e-05
+    - 0.005
+    lr_critic:
+    - 1.0e-05
+    - 0.005
+    td3_policy_noise:
+    - 0
+    - 0.1
+    train_frames_fraction:
+    - 0.1
+    - 3.0
+  rl_hp_selection:
+  - lr_actor
+  - lr_critic
+  - batch_size
+  - td3_policy_noise
+  rl_hyperparam: 0.2
+  sub_config:
+  - rl_hp_ranges
+nevo: !!python/object:searl.utils.handler.config.AttributeDict
+  elitism: true
+  ind_memory: false
+  init_random: false
+  min_train_time: 2000
+  mutation: true
+  population_size: 10
+  reuse_batch: 1
+  selection: true
+  tournament_size: 3
+  training: true
+  worker: 10
+rl: !!python/object:searl.utils.handler.config.AttributeDict
+  batch_size: 1000
+  clip_grad_norm: 100
+  gamma: 0.99
+  lr_actor: 0.001
+  lr_critic: 0.001
+  optimizer: adam
+  start_timesteps: 3000
+  tau: 0.005
+  td3_noise_clip: 0.5
+  td3_policy_noise: 0.2
+  td3_update_freq: 2
+  train_frames_fraction: 0.2
+seed: !!python/object:searl.utils.handler.config.AttributeDict
+  evaluation: 123
+  mutation: 123
+  numpy: 123
+  replay_memory: 123
+  torch: 123
+  training: 123
+sub_config:
+- expt
+- nevo
+- mutation
+- train
+- rl
+- seed
+- bench
+- eval
+- actor
+- critic
+train: !!python/object:searl.utils.handler.config.AttributeDict
+  evo_warm_up: 1
+  min_train_steps: 250
+  num_frames: 2000000
+  replay_memory_size: 1000000
+  td3_double_q: true
