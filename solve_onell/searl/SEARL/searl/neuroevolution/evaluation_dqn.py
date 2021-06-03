@@ -9,6 +9,8 @@ from searl.rl_algorithms.components.wrappers import make_atari, wrap_deepmind, w
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("train CUDA", device == torch.device("cuda"), device)
 
+from solve_hyflex.searl.utils import make_env
+
 
 class MPEvaluation():
     def __init__(self, config, logger, replay_memory=None):
@@ -20,12 +22,12 @@ class MPEvaluation():
         self.eval_episodes = config.eval.eval_episodes
 
     def test_individual(self, individual, epoch):
-        return_dict = self._evaluate_individual(individual, self.cfg, self.cfg.eval.test_episodes, epoch, False)
+        return_dict = self._evaluate_individual(individual, self.cfg, self.cfg.eval.test_episodes, epoch, False, test=True)
         fitness = np.mean(return_dict[individual.index]["fitness_list"])
         return fitness
 
     @staticmethod
-    def _evaluate_individual(individual, config, num_episodes, seed, exploration_noise=False, start_phase=False):
+    def _evaluate_individual(individual, config, num_episodes, seed, exploration_noise=False, start_phase=False, test=False):
 
         actor_net = individual.actor
 
@@ -34,9 +36,10 @@ class MPEvaluation():
         transistions_list = []
         episodes = 0
 
-        env = make_atari(config.env.name)
-        env = wrap_deepmind(env)
-        env = wrap_pytorch(env)
+        #env = make_atari(config.env.name)
+        #env = wrap_deepmind(env)
+        #env = wrap_pytorch(env)
+        env = make_env(config.bench)
         env.seed(seed)
 
         actor_net.eval()
@@ -56,6 +59,13 @@ class MPEvaluation():
                     next_state, reward, done, info = env.step(action)
                     episode_fitness += reward
                     num_frames += 1
+
+                    # ND: add this
+                    if done:
+                        if test:
+                            self.log("(evaluate) " + info['msg'])
+                        else:
+                            self.log("(training) " + info['msg'])
 
                     transition = Transition(torch.FloatTensor(state), torch.LongTensor([action]),
                                             torch.FloatTensor(next_state), torch.FloatTensor(np.array([reward])),

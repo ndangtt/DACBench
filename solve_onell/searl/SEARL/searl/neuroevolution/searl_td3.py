@@ -55,7 +55,7 @@ class SEARLforTD3():
 
         self.mutation = Mutations(config=self.cfg, replay_sample_queue=sample_queue)
 
-        self.training = TD3Training(config=self.cfg, replay_sample_queue=sample_queue)
+        self.training = TD3Training(config=self.cfg, replay_sample_queue=sample_queue, logger=self.log)
 
     def initial_population(self):
         self.log.log("initialize population")
@@ -120,16 +120,19 @@ class SEARLforTD3():
             #print(population[0].__dict__)
             #sys.exit(0)
 
-            population_mean_fitness, population_var_fitness, eval_frames = \
-                self.log.log_func(self.eval.evaluate_population, population=population,
-                                  exploration_noise=self.cfg.eval.exploration_noise,
-                                  total_frames=num_frames, pool=pool)
-            num_frames += eval_frames
-            frames_since_mut += eval_frames
+            while True: # ND: add this
+                population_mean_fitness, population_var_fitness, eval_frames = \
+                    self.log.log_func(self.eval.evaluate_population, population=population,
+                                      exploration_noise=self.cfg.eval.exploration_noise,
+                                      total_frames=num_frames, pool=pool)
+                num_frames += eval_frames
+                frames_since_mut += eval_frames
+                if num_frames >= self.cfg.nevo.min_train_time: # ND: add this
+                    break
 
             self.log.population_info(population_mean_fitness, population_var_fitness, population, num_frames, epoch)
 
-            self.ckp.save_object(population, name="population")
+            self.ckp.save_object(population, name="population-" + str(epoch))
             self.log.log("save population")
             if not self.cfg.nevo.ind_memory:
                 rm_dict = self.replay_memory.save()
@@ -137,7 +140,7 @@ class SEARLforTD3():
                     self.log("save replay memory failed")
                 else:
                     self.log("replay memory size", len(rm_dict['memory']))
-                self.ckp.save_object([rm_dict], name="replay_memory")
+                self.ckp.save_object([rm_dict], name="replay_memory-" + str(epoch))
                 self.log("save replay memory")
 
             if num_frames >= self.cfg.train.num_frames:
@@ -152,7 +155,7 @@ class SEARLforTD3():
             if self.cfg.nevo.mutation:
                 population = self.log.log_func(self.mutation.mutation, population)
 
-            if self.cfg.nevo.training and num_frames>self.cfg.nevo.min_train_time: # ND: bug fix
+            if self.cfg.nevo.training:
                 population = self.log.log_func(self.training.train, population=population, eval_frames=eval_frames,
                                                pool=pool)
 

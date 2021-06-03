@@ -6,6 +6,7 @@ import json
 import os
 import time
 from pathlib import Path
+import numpy as np
 
 from searl.utils.handler.base_handler import Handler
 
@@ -40,6 +41,9 @@ class LogJSON(Handler):
             file.write(f"\n]")
 
     def jlog(self, key: str, value, time_step=None):
+        # ND: add this if to avoid error message with json.dumps for numpy.int64
+        if type(value)==np.int64:
+            value = float(value)
         data = {key: {'value': value, 'time_step': time_step, 'time_stamp': self.time_stamp(), 'time': time.time()}}
         with open(self.log_dir / self.json_file, 'a') as file:
             file.write(", \n")

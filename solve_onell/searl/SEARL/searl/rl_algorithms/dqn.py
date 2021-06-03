@@ -64,6 +64,10 @@ class DQN(object):
                 state = next_state
                 episode_reward += reward
 
+                # ND: add this
+                if done:
+                    self.log("(evaluate) " + info['msg'])
+
             episode_reward_list.append(episode_reward)
 
         avg_reward = np.mean(episode_reward_list)

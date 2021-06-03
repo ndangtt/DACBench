@@ -117,7 +117,8 @@ class TD3(object):
 
             if done:
 
-                if total_timesteps != 0:
+                #if total_timesteps != 0:
+                if total_timesteps >= self.cfg.td3.start_timesteps:
                     self.log("Start Training: Total timesteps: %d Episode Num: %d Episode T: %d Reward: %f" % (
                         total_timesteps, episode_num, episode_timesteps, episode_reward), time_step=total_timesteps)
                     self.log("episode_reward", episode_reward, time_step=total_timesteps)
@@ -171,8 +172,8 @@ class TD3(object):
             done_bool = float(done) # ND: is it okay?
 
             # ND: add this
-            if info:
-                self.log("(training) " + info)
+            if done:
+                self.log("(training) " + info['msg'])
 
             t_next_state = to_tensor(next_state).unsqueeze(0)
 
@@ -289,7 +290,7 @@ class TD3(object):
 
 
 def start_TD3_training(config, expt_dir):
-    with Supporter(experiments_dir=expt_dir, config_dict=config, count_expt=True) as sup:
+    with Supporter(experiments_dir=expt_dir, config_dict=config, count_expt=False) as sup:
         cfg = sup.get_config()
         log = sup.get_logger()
 

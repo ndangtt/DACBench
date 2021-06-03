@@ -20,12 +20,13 @@ def get_optimizer(name):
 
 class TD3Training():
 
-    def __init__(self, config, replay_sample_queue):
+    def __init__(self, config, replay_sample_queue, logger): # ND: add loger
         self.cfg = config
         self.rng = np.random.RandomState(self.cfg.seed.training)
         self.replay_sample_queue = replay_sample_queue
 
         self.args = config.rl
+        self.log = logger # ND: add this
 
     @staticmethod
     def update_parameters(indi, replay_sample_queue, iterations):
@@ -147,7 +148,9 @@ class TD3Training():
 
     def train(self, population, eval_frames, pool=None):
         pop_id_lookup = [ind.index for ind in population]
-        iterations = max(self.cfg.train.min_train_steps, int(self.cfg.rl.train_frames_fraction * eval_frames))
+        #iterations = max(self.cfg.train.min_train_steps, int(self.cfg.rl.train_frames_fraction * eval_frames)) #ND: change this by the next line
+        iterations = np.clip(int(self.cfg.rl.train_frames_fraction * eval_frames), self.cfg.train.min_updates_per_epoch, self.cfg.train.max_updates_per_epoch)
+        self.log("Train: do " + str(iterations) + " updates")
 
         if self.cfg.nevo.ind_memory:
             args_list = [(indi, indi.replay_memory, iterations) for indi in population]

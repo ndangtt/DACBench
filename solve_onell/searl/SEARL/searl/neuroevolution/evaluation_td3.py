@@ -72,6 +72,7 @@ class MPEvaluation():
 
                     next_state, reward, done, info = env.step(step_action)  # Simulate one step in environment
 
+                    # ND: add this
                     if done:
                         if test:
                             self.log("(evaluate) " + info['msg'])

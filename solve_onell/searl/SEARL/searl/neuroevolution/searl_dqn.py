@@ -13,6 +13,8 @@ from searl.neuroevolution.training_dqn import DQNTraining
 from searl.rl_algorithms.components.wrappers import make_atari, wrap_deepmind, wrap_pytorch
 from searl.utils.supporter import Supporter
 
+from solve_hyflex.searl.utils import make_env
+
 
 class SEARLforDQN():
 
@@ -101,7 +103,7 @@ class SEARLforDQN():
             if self.cfg.nevo.mutation:
                 population = self.log.log_func(self.mutation.mutation, population)
 
-            if self.cfg.nevo.training:
+            if self.cfg.nevo.training and num_frames>self.cfg.nevo.min_train_time: #ND: bug fix
                 iterations = min(
                     max(self.cfg.train.min_train_steps, int(self.cfg.rl.train_frames_fraction * eval_frames)),
                     self.cfg.train.max_train_steps)
@@ -127,9 +129,10 @@ def start_searl_dqn_run(config_dict, expt_dir):
     cfg = sup.get_config()
     log = sup.get_logger()
 
-    env = make_atari(cfg.env.name)
-    env = wrap_deepmind(env)
-    env = wrap_pytorch(env)
+    #env = make_atari(cfg.env.name)
+    #env = wrap_deepmind(env)
+    #env = wrap_pytorch(env)
+    env = make_env(cfg.bench) # ND: change this
     cfg.set_attr("action_dim", env.action_space.n)
     cfg.set_attr("state_dim", env.observation_space.shape)
 

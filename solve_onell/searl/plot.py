@@ -1,3 +1,6 @@
+#!/home/nttd/anaconda3/envs/dacbench/bin/python
+
+
 import argparse
 import yaml
 import numpy as np
@@ -5,9 +8,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 import sys
+import os
+
+script_path = os.path.dirname(os.path.realpath(__file__))
 
 
-def read_optimal_results(n, init_solution_ratio, value_name, prefix='./data/dyn_theory'):
+def read_optimal_results(n, init_solution_ratio, value_name, prefix=script_path + '/data/dyn_theory'):
     if init_solution_ratio:
         fn = prefix + '-' + str(init_solution_ratio) + '.csv'
     else:
@@ -54,16 +60,17 @@ def make_plot(exp_dir, value_name, nrows=1, ncols=2, plot_id_start=1):
     plt.xlim([t1.iteration.min(),t1.iteration.max()])
 
     # plot the optimal
-    init_solution_ratio = None
-    if ('init_solution_ratio' in conf['bench'].__dict__) and (conf['bench'].init_solution_ratio != None):
-        init_solution_ratio = float(conf['bench'].init_solution_ratio)
-    if value_name == 'R':
-        optim_value_name = conf['bench'].reward_choice
-    elif value_name == 'evals':
-        optim_value_name = 'n_evals'
-    mean, std = read_optimal_results(t.n[0], init_solution_ratio, optim_value_name)
-    plt.plot(t1.iteration, [mean]*len(t1.iteration), color='red')
-    plt.fill_between(t1.iteration, [mean-std]*len(t1.iteration), [mean+std]*len(t1.iteration), color='red', alpha=0.2)
+    if value_name in ['R','evals']:
+        init_solution_ratio = None
+        if ('init_solution_ratio' in conf['bench'].__dict__) and (conf['bench'].init_solution_ratio != None):
+            init_solution_ratio = float(conf['bench'].init_solution_ratio)
+        if value_name == 'R':
+            optim_value_name = conf['bench'].reward_choice
+        elif value_name == 'evals':
+            optim_value_name = 'n_evals'
+        mean, std = read_optimal_results(t.n[0], init_solution_ratio, optim_value_name)
+        plt.plot(t1.iteration, [mean]*len(t1.iteration), color='red')
+        plt.fill_between(t1.iteration, [mean-std]*len(t1.iteration), [mean+std]*len(t1.iteration), color='red', alpha=0.2)
 
     plt.title('evaluation-'+value_name)
 
@@ -75,17 +82,20 @@ def make_plot(exp_dir, value_name, nrows=1, ncols=2, plot_id_start=1):
 
 def main():
     exp_dir = sys.argv[1]
-    value_names = ['evals','R']
+    while exp_dir[-1]=='/':
+        exp_dir = exp_dir[:-1]
+    value_names = ['evals','R','lbd_mean']
     nrows = len(value_names)
     ncols = 2
     while True:
         plt.clf()
         plot_start_id = 1
-        for value_name in ['evals','R']:
+        for value_name in value_names:
             make_plot(exp_dir, value_name, nrows, ncols, plot_start_id)
             plot_start_id += 2
         plt.tight_layout()
         plt.savefig(exp_dir + '/plot.png')
+        plt.savefig('plot-' + os.path.basename(exp_dir) +'.png')
         #time.sleep(1)
         sys.exit(0)
 
