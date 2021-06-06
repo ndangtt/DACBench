@@ -1,4 +1,4 @@
-#!/home/nttd/anaconda3/envs/dacbench/bin/python
+#!/circa/home/nttd/anaconda3/envs/dacbench/bin/python
 
 
 import argparse
@@ -40,9 +40,11 @@ def make_plot(exp_dir, value_name, nrows=1, ncols=2, plot_id_start=1):
     vals = [np.array([float(s.split('=')[1]) for s in line.split('Episode done:')[1].split('; ')])[[1,4,7,8,9,10]] for line in ls_lines if '(training)' in line]
     #print(np.array([float(s.split('=')[1]) for s in line.split('Episode done:')[1].split('; ')])[[1,4,7,8,9,10]])
     t = pd.DataFrame(vals, columns=['n','evals','lbd_min','lbd_max','lbd_mean','R'])
-    plt.subplot(nrows,ncols,plot_id_start)
+    ax1 = plt.subplot(nrows,ncols,plot_id_start)
     plt.plot(t[value_name])
     plt.title('training-' + value_name)
+    y1_min = t[value_name].min()
+    y1_max = t[value_name].max()
 
     # evaluation plot
     vals = [np.array([float(s.split('=')[1]) for s in line.split('Episode done:')[1].split('; ')])[[1,4,7,8,9,10]] for line in ls_lines if '(evaluate)' in line]
@@ -54,10 +56,19 @@ def make_plot(exp_dir, value_name, nrows=1, ncols=2, plot_id_start=1):
     n_rows = len(t.index)
     t['iteration'] = np.repeat(np.arange(np.ceil(n_rows/eval_episodes)), eval_episodes)[:n_rows]
     t1 = t.groupby(['n','iteration'])[value_name].agg([np.mean,np.std]).reset_index()
-    plt.subplot(nrows,ncols,plot_id_start+1)
+    ax2 = plt.subplot(nrows,ncols,plot_id_start+1)
     plt.plot(t1.iteration, t1['mean'])
     plt.fill_between(t1.iteration, t1['mean'] - t1['std'], t1['mean'] + t1['std'], alpha=0.2)
     plt.xlim([t1.iteration.min(),t1.iteration.max()])
+    y2_min = (t1['mean'] - t1['std']).min()
+    y2_max = (t1['mean'] - t1['std']).max()
+
+    # set ylim of the training and evaluation plots to be the same
+    y_min = min(y1_min, y2_min)    
+    y_max = max(y1_max, y2_max)
+    ax1.set_ylim([y_min,y_max])
+    ax2.set_ylim([y_min,y_max])
+
 
     # plot the optimal
     if value_name in ['R','evals']:
@@ -84,7 +95,7 @@ def main():
     exp_dir = sys.argv[1]
     while exp_dir[-1]=='/':
         exp_dir = exp_dir[:-1]
-    value_names = ['evals','R','lbd_mean']
+    value_names = ['evals','R','lbd_mean', 'lbd_max']
     nrows = len(value_names)
     ncols = 2
     while True:
