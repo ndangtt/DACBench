@@ -336,7 +336,7 @@ class OneLLEnv(AbstractEnv):
             elif var_name == "delta f(x)":
                 self.state_functions.append(lambda: self.history_fx[-1] - self.history_fx[-2])
             elif var_name == "optimal_lbd_theory":
-                self.state_functions.append(lambda: np.sqrt(n/max(1,n-self.history_fx[-1])))
+                self.state_functions.append(lambda: np.sqrt(self.n/max(1,self.n-self.history_fx[-1])))
             else:
                 raise Exception("Error: invalid state variable name: " + var_name)
         
