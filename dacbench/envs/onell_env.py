@@ -7,6 +7,7 @@ from collections import deque
 import sys
 import os
 import uuid
+import gym
 
 from dacbench import AbstractEnv
 
@@ -334,6 +335,8 @@ class OneLLEnv(AbstractEnv):
                 self.state_functions.append(lambda: self.history_fx[-1])
             elif var_name == "delta f(x)":
                 self.state_functions.append(lambda: self.history_fx[-1] - self.history_fx[-2])
+            elif var_name == "optimal_lbd_theory":
+                self.state_functions.append(lambda: np.sqrt(n/max(1,n-self.history_fx[-1])))
             else:
                 raise Exception("Error: invalid state variable name: " + var_name)
         
@@ -342,6 +345,9 @@ class OneLLEnv(AbstractEnv):
         self.action_var_names = [s.strip() for s in config.action_description.split(',')] # names of 
         for name in self.action_var_names:
             assert name in ['lbd', 'lbd1', 'lbd2', 'p', 'c'], "Error: invalid action variable name: " + name
+        self.action_choices = None
+        if isinstance(self.action_space, gym.spaces.Discrete): # TODO: this only works if the discrete action space is 1-d
+            self.action_choices = config.action_choices
 
         # the random generator used by OneLL-GA
         if 'seed' in config:
@@ -423,6 +429,8 @@ class OneLLEnv(AbstractEnv):
         i = 0
         rs = {}
         if not isinstance(action, np.ndarray):
+            if self.action_choices: # TODO: only support 1-d discrete action space
+                action = self.action_choices[self.action_var_names[0]][action]
             action = [action]
         for var_name in self.action_var_names:
             if var_name == 'lbd':

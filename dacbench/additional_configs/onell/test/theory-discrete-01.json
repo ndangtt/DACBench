@@ -1,0 +1,30 @@
+{
+    "name": "lbd_theory_discrete_01",
+    "algorithm": "onell",
+    "action_choices": {"lbd": [1, 20, 50, 80, 100]},
+    "action_space_class": "Discrete",
+    "action_space_args": [5],
+    "action_description": "lbd",
+    "observation_space_class": "Box",
+    "observation_space_type": "<class 'numpy.float32'>",
+    "observation_space_args": [
+        [1, 0],
+        [Infinity, Infinity]
+    ],
+    "observation_description": "n, f(x)",
+    "reward_range": [-Infinity, Infinity],
+    "reward_choice": "imp_minus_evals",
+    "cutoff": 1000000000.0,
+    "include_xprime": true,
+    "count_different_inds_only": true,
+    "seed": 0,
+    "problem": "OneMax",
+    "instance_set_path": "onemax_2000",
+    "benchmark_info": {
+        "identifier": "onell",
+        "name": "OneLL-GA benchmark",
+        "reward": "",
+        "state_description": [""]
+    },
+    "wrappers": []
+}
