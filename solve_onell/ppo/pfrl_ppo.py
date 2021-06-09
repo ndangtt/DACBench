@@ -45,7 +45,7 @@ from dacbench.benchmarks.onell_benchmark import OneLLBenchmark
 import glob
 import matplotlib.pyplot as plt
 
-PPO_DEFAULT_CONFIG = OrderedDict({        
+PPO_DEFAULT_CONFIG_OLD = OrderedDict({        
     "normalize_obs": True, # standardise observations based on their running empirical mean and variance 
     "obs_clip_threshold": None, # (conditional: normalize_obs=True) clip all normalized obs to [-threshold, threshold]. Set to None for no threshold
     "reward_scale_factor": 1.0, # reward = reward * reward_scale_factor           
@@ -64,6 +64,46 @@ PPO_DEFAULT_CONFIG = OrderedDict({
     "update_interval": 2048, # number of steps per policy iteration (~amount of data used for each model update iteration, some sources say that this value should be large, i.e., more data per policy update iteration even though it means less iterations)
     "batchsize": 64, # minibatch size    
     "n_epochs": 10, # number of epochs per policy update
+
+    "vf_coef": 1.0, # weight coefficient for loss of value function
+                    # TODO: does this parameter matter if shared_network=False?
+    "entropy_coef": 0.01, # weight coefficient for entropy bonus
+
+    "clip_eps": 0.2, # clip parameter (epsilon) for policy function
+    "clip_eps_vf": None, # clip parameter (epsilon) for value function (doesn't seem to be important in https://arxiv.org/pdf/2005.12729.pdf), and should be used with care when in combination with reward scaling (https://stable-baselines.readthedocs.io/en/master/_modules/stable_baselines/ppo2/ppo2.html)
+    "clip_eps_linear_decay": False, # linearly decay clip parameter (epsilon) for policy function    
+    
+    "standadize_advantages": True, # standadise all advantage values before backprop, this normally helps to boost empirical performance (see http://rail.eecs.berkeley.edu/deeprlcourse-fa17/f17docs/hw2_final.pdf, and http://karpathy.github.io/2016/05/31/rl/)    
+
+    "gamma": 0.99, # discount factor
+    "lambd": 0.95, # GAE lambda 
+
+    # statistics
+    "value_stats_window": 1000, # window size used to compute statistics of value predictions
+    "entropy_stats_window": 1000, # window size used to compute statistics of entropy of action distributions
+    "value_loss_stats_window": 256, # window size used to compute statistics of loss values regarding the value function.
+    "policy_loss_stats_window": 256 # window size used to compute statistics of loss values regarding the policy.
+})
+
+PPO_DEFAULT_CONFIG = OrderedDict({        
+    "normalize_obs": False, # standardise observations based on their running empirical mean and variance 
+    "obs_clip_threshold": None, # (conditional: normalize_obs=True) clip all normalized obs to [-threshold, threshold]. Set to None for no threshold
+    "reward_scale_factor": 1.0, # reward = reward * reward_scale_factor           
+
+    # policy and value function networks
+    "n_hidden_nodes": 50, # number of hidden nodes    
+    "activation": "Tanh", # activation function
+    "bound_mean": True, # (continuous action space only) bound the learnt mean action to [min_action, max_action] using tanh
+    "var_init": 0.1, # (continuous action space only) initial value for variance of gausian distribution (assuming state-indenpendent variance), must be >=0, for policy network only    
+    "orthogonal_init": True, # orthogonal initialization for network weights instead of Xavier, shown to be important in https://arxiv.org/pdf/2005.12729.pdf
+    "zero_init_bias": False, # set all initial bias weights as zero (True in pfrl mujoco examples for PPO and TRPO)
+
+    "lr": 3e-4, # learning rate 
+    "lr_linear_decay": False, # linearly decay lr to 0 (shown to be important in https://arxiv.org/pdf/2005.12729.pdf, param: anneal-lr) 
+       
+    "update_interval": 10000, # number of steps per policy iteration (~amount of data used for each model update iteration, some sources say that this value should be large, i.e., more data per policy update iteration even though it means less iterations)
+    "batchsize": 256, # minibatch size    
+    "n_epochs": 50, # number of epochs per policy update
 
     "vf_coef": 1.0, # weight coefficient for loss of value function
                     # TODO: does this parameter matter if shared_network=False?
@@ -111,18 +151,10 @@ class PfrlPPO():
                 self.config[key] = val
         config = self.config
 
+        # create output dir
+        os.makedirs(outdir, exist_ok=True)
+        
         self.n_parallel = n_parallel
-
-        if save_configs:
-            # create output dir
-            os.makedirs(outdir, exist_ok=True)
-            # save RL config to output dir        
-            with open(outdir + '/config.json', 'wt') as f:
-                    json.dump(self.config, f, indent=2)   
-            # save benchmark config to output dir
-            if bench_config:
-                with open(outdir + "/bench_config.json", 'wt') as f:
-                    json.dump(bench_config, f, indent=2)
 
         # make sure env observation space is converted to float32 (required by pfrl)
         float32_wrapper = {'function':pfrl.wrappers.CastObservationToFloat32,'args':{}}
@@ -264,8 +296,15 @@ class PfrlPPO():
                         value_loss_stats_window=config.value_loss_stats_window,
                         policy_loss_stats_window=config.policy_loss_stats_window)
 
-        # save experiment config
         if save_configs:
+            all_conf = {}
+            # save RL config to output dir        
+            with open(outdir + '/config.json', 'wt') as f:
+                    json.dump(self.config, f, indent=2)   
+            # save benchmark config to output dir
+            if bench_config:
+                with open(outdir + "/bench_config.json", 'wt') as f:
+                    json.dump(bench_config, f, indent=2)
             self.exp_config = objdict()
             for name in ['max_steps','n_parallel','seed','save_agent_interval','evaluate_during_train','eval_interval','eval_n_episodes','outdir']:
                 self.exp_config[name] = locals()[name]        

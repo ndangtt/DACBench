@@ -7,6 +7,7 @@ from torch import nn
 import torch
 import numpy as np
 from dacbench.benchmarks.onell_benchmark import OneLLBenchmark
+import gym
 
 def flatten_env(self, env):
         # flatten observation space to Box so that it's supported by pfrl        
@@ -62,7 +63,30 @@ class BoundByTanh(nn.Module):
 
     def forward(self, input):
         return self.min_val + torch.tanh(input) * (self.max_val - self.min_val)/2
-        
+
+
+class TestEnvWrapper(gym.Wrapper):
+
+    def __init__(self, env):
+        super().__init__(env)
+
+    def step(self, action):
+        state, reward, done, info = super().step(action)
+        if done:
+            self.env.logger.info("(evaluate) " + info['msg'])
+        return state, reward, done, info
+
+class TrainEnvWrapper(gym.Wrapper):
+
+    def __init__(self, env):
+        super().__init__(env)
+
+    def step(self, action):
+        state, reward, done, info = super().step(action)
+        if done:
+            self.env.logger.info("(training) " + info['msg'])
+            #print("(training) " + info['msg'])
+        return state, reward, done, info
     
 def make_onell_env(seed, test, wrappers=[], bench_config=None):
     # use a different seed if this is a test environment
@@ -74,12 +98,12 @@ def make_onell_env(seed, test, wrappers=[], bench_config=None):
         bench = OneLLBenchmark()
     bench.config.seed = seed
     env = bench.get_environment()
-    if not test:
-        env.env_type = "train"
-    else:
-        env.env_type = "test"
     for wrapper in wrappers:
         env = wrapper['function'](env, **wrapper['args'])
+    if test:
+        env = TestEnvWrapper(env)
+    else:
+        env = TrainEnvWrapper(env)
     return env
 
 def read_config(config):    
@@ -88,7 +112,7 @@ def read_config(config):
             with open(config, 'rt') as f:
                 config = json.load(f)
         else:  # agent config as string ("param1=val1,param2=val2,...")
-            ls = [s.strip() for s in config.split(',')]
+            ls = [s.strip() for s in config.split(';')]
             config = {}
             for s in ls:
                 param = s.split('=')[0]
