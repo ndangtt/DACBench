@@ -91,7 +91,7 @@ bench:
 eval:
   eval_episodes:                2
   min_eval_steps:               0
-  exploration_noise:            0.1     # Default 0.1
+  exploration_noise:            0.3     # Default 0.1
   test_episodes:                20
   #test_seed:                    123
 

@@ -81,7 +81,7 @@ seed:
 bench:
   name:                         'dacbench.benchmarks.onell_benchmark.OneLLBenchmark'
   base_config_name:             'lbd_theory'
-  instance_set_path:            'onemax_500'
+  instance_set_path:            'onemax_2000'
   reward_choice:                'imp_minus_evals'
   init_solution_ratio:          0.95
   action_space_args:            [[1], [100]]
@@ -91,7 +91,7 @@ bench:
 eval:
   eval_episodes:                2
   min_eval_steps:               0
-  exploration_noise:            0.1     # Default 0.1
+  exploration_noise:            0.3     # Default 0.1
   test_episodes:                20
   #test_seed:                    123
 
