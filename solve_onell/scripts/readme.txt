@@ -1,4 +1,4 @@
-The script plot.py is used to create a summary plot of an RL training given a log file.
+The script plot.py is used to create a summary plot of an RL training given a log file. It doesn't have to be run in this folder (you can run it from anywhere).
 
 It will extract all lines in the log files that containing "(training) Episode done" for "(evaluate) Episode done", extract stats from those lines and plot them together with the optimal values (read from the `.csv` files in folder `./data/`).
 
