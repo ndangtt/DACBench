@@ -306,7 +306,7 @@ class OneLLEnv(AbstractEnv):
             self.logger.info("Starting from initial solution with f = %.2f * n" % (self.init_solution_ratio))     
 
         # name of reward function
-        assert config.reward_choice in ['imp_div_evals', 'imp_div_evals_new', 'imp_minus_evals', 'minus_evals']
+        assert config.reward_choice in ['imp_div_evals', 'imp_div_evals_new', 'imp_minus_evals', 'minus_evals', 'imp']
         self.reward_choice = config.reward_choice
         #print("Reward choice: " + self.reward_choice)        
         
@@ -326,11 +326,11 @@ class OneLLEnv(AbstractEnv):
             if var_name == 'n':
                 self.state_functions.append(lambda: self.n)
             elif var_name in ['lbd','lbd1','lbd2', 'p', 'c']:
-                self.state_functions.append(lambda: vars(self)['history_' + var_name][-1])
+                self.state_functions.append(lambda his='history_'+var_name: vars(self)[his][-1])
             elif "_{t-" in var_name:
                 k = int(var_name.split("_{t-")[1][:-1]) # get the number in _{t-<number>}
                 name = var_name.split("_{t-")[0] # get the variable name (lbd, lbd1, etc)
-                self.state_functions.append(lambda: vars(self)['history_' + name][-k])
+                self.state_functions.append(lambda his='history_'+name: vars(self)[his][-k])
             elif var_name == "f(x)":
                 self.state_functions.append(lambda: self.history_fx[-1])
             elif var_name == "delta f(x)":
@@ -428,7 +428,7 @@ class OneLLEnv(AbstractEnv):
         """
         i = 0
         rs = {}
-        if not isinstance(action, np.ndarray):
+        if (not isinstance(action, np.ndarray)) and (not isinstance(action, list)):
             if self.action_choices: # TODO: only support 1-d discrete action space
                 action = self.action_choices[self.action_var_names[0]][action]
             action = [action]
@@ -496,6 +496,8 @@ class OneLLEnv(AbstractEnv):
             reward = self.x.fitness - fitness_before_update - n_evals
         elif self.reward_choice=='minus_evals':
             reward = -n_evals
+        elif self.reward_choice=='imp':
+            reward = self.x.fitness - fitness_before_update
         self.rewards.append(reward)
 
         # update histories
