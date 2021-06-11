@@ -15,6 +15,7 @@ from searl.neuroevolution.tournament_selection import TournamentSelection
 from searl.neuroevolution.training_td3 import TD3Training
 from searl.utils.supporter import Supporter
 from solve_onell.searl.utils import make_env
+import pprint
 
 
 class SEARLforTD3():
@@ -183,6 +184,8 @@ def start_searl_td3_run(config, expt_dir):
 
         #env = gym.make(cfg.env.name)
         env = make_env(cfg.bench) # ND: change this
+        log.log("Environment info: ")
+        log.log(pprint.pformat(env.__dict__, indent=2))
         cfg.set_attr("action_dim", env.action_space.shape[0])
         cfg.set_attr("state_dim", env.observation_space.shape[0])
 
