@@ -306,7 +306,7 @@ class OneLLEnv(AbstractEnv):
             self.logger.info("Starting from initial solution with f = %.2f * n" % (self.init_solution_ratio))     
 
         # name of reward function
-        assert config.reward_choice in ['imp_div_evals', 'imp_div_evals_new', 'imp_minus_evals', 'minus_evals', 'imp', 'minus_evals_normalised']
+        assert config.reward_choice in ['imp_div_evals', 'imp_div_evals_new', 'imp_minus_evals', 'minus_evals', 'imp', 'minus_evals_normalised', 'imp_minus_evals_normalised']
         self.reward_choice = config.reward_choice
         #print("Reward choice: " + self.reward_choice)        
         
@@ -497,7 +497,9 @@ class OneLLEnv(AbstractEnv):
         elif self.reward_choice=='minus_evals':
             reward = -n_evals
         elif self.reward_choice=='minus_evals_normalised':
-            reward = -n_evals / self.max_evals
+            reward = -n_evals / self.max_evals            
+        elif self.reward_choice=='imp_minus_evals_normalised':
+            reward = (self.x.fitness - fitness_before_update - n_evals) / self.max_evals
         elif self.reward_choice=='imp':
             reward = self.x.fitness - fitness_before_update
         self.rewards.append(reward)
