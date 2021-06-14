@@ -325,7 +325,7 @@ class OneLLEnv(AbstractEnv):
         for var_name in self.state_var_names:
             if var_name == 'n':
                 self.state_functions.append(lambda: self.n)
-            elif var_name in ['lbd','lbd1','lbd2', 'p', 'c']:
+            elif var_name in ['lbd','lbd1','lbd2', 'p', 'c', 'lbd_choice']:
                 self.state_functions.append(lambda his='history_'+var_name: vars(self)[his][-1])
             elif "_{t-" in var_name:
                 k = int(var_name.split("_{t-")[1][:-1]) # get the number in _{t-<number>}
@@ -344,7 +344,7 @@ class OneLLEnv(AbstractEnv):
         self.action_description = config.action_description
         self.action_var_names = [s.strip() for s in config.action_description.split(',')] # names of 
         for name in self.action_var_names:
-            assert name in ['lbd', 'lbd1', 'lbd2', 'p', 'c'], "Error: invalid action variable name: " + name
+            assert name in ['lbd', 'lbd1', 'lbd2', 'p', 'c', 'lbd_choice'], "Error: invalid action variable name: " + name
         self.action_choices = None
         if isinstance(self.action_space, gym.spaces.Discrete): # TODO: this only works if the discrete action space is 1-d
             self.action_choices = config.action_choices
@@ -399,6 +399,7 @@ class OneLLEnv(AbstractEnv):
         self.history_p = deque([-1]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH)
         self.history_c = deque([-1]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH)
         self.history_fx = deque([self.x.fitness]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH) 
+        self.history_lbd_choice = deque([-1]*HISTORY_LENGTH, maxlen=HISTORY_LENGTH) 
 
         # for debug only
         self.lbds = [] 
@@ -429,7 +430,7 @@ class OneLLEnv(AbstractEnv):
         i = 0
         rs = {}
         if (not isinstance(action, np.ndarray)) and (not isinstance(action, list)):
-            if self.action_choices: # TODO: only support 1-d discrete action space
+            if self.action_choices: # TODO: only support 1-d discrete action space 
                 action = self.action_choices[self.action_var_names[0]][action]
             action = [action]
         for var_name in self.action_var_names:
@@ -447,7 +448,7 @@ class OneLLEnv(AbstractEnv):
         if not 'c' in rs.keys():
             rs['c'] = 1 / rs['lbd1']
 
-        return rs['lbd1'], rs['lbd2'], rs['p'], rs['c']    
+        return rs['lbd1'], rs['lbd2'], rs['p'], rs['c']
     
     def step(self, action):
         """
@@ -511,6 +512,7 @@ class OneLLEnv(AbstractEnv):
         self.history_lbd.append(lbd1)
         self.history_p.append(p)
         self.history_c.append(c)
+        self.history_lbd_choice.append(action)
 
         #print("%.2f" % (action), end='\n' if done else '\r')
         #print("steps:%5d\t evals:%5d\t lbd:%5d\t f:%5d" %(self.c_step, self.total_evals, lbd1, self.x.fitness), end='\r')
