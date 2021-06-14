@@ -212,16 +212,28 @@ class PfrlPPO():
         else:
             act_size = act_space.n
 
+        # for weight initialisation, from pfrl example code (pfrl/examples/atari/train_ppo_ale.py)
+        def lecun_init(layer, gain=1): 
+            if isinstance(layer, (nn.Conv2d, nn.Linear)):
+                pfrl.initializers.init_lecun_normal(layer.weight, gain)
+                nn.init.zeros_(layer.bias)
+            else:
+                pfrl.initializers.init_lecun_normal(layer.weight_ih_l0, gain)
+                pfrl.initializers.init_lecun_normal(layer.weight_hh_l0, gain)
+                nn.init.zeros_(layer.bias_ih_l0)
+                nn.init.zeros_(layer.bias_hh_l0)
+            return layer
+        
         # create policy network
-        policy_layers = [
-            nn.Linear(obs_size, n_hiddens),
-            activation(),
-            nn.Linear(n_hiddens, n_hiddens),
-            activation(),
-            nn.Linear(n_hiddens, act_size),                
-            
-        ]
         if isinstance(act_space, gym.spaces.Box):
+            policy_layers = [
+                nn.Linear(obs_size, n_hiddens),
+                activation(),
+                nn.Linear(n_hiddens, n_hiddens),
+                activation(),
+                nn.Linear(n_hiddens, act_size),                
+                
+            ]
             if config.bound_mean:                
                 policy_layers.append(utils.BoundByTanh(act_space.low, act_space.high))
             policy_layers.append(pfrl.policies.GaussianHeadWithStateIndependentCovariance(
@@ -231,8 +243,16 @@ class PfrlPPO():
                 var_param_init=config.var_init,  # log std = 0 => std = 1
                 ))
         else:
-            policy_layers.append(pfrl.policies.SoftmaxCategoricalHead())        
+            policy_layers = [
+                nn.Linear(obs_size, n_hiddens),
+                activation(),
+                nn.Linear(n_hiddens, n_hiddens),
+                activation(),
+                lecun_init(nn.Linear(n_hiddens, act_size), 1e-2), # make sure weight of last layer is initialised to very small value (see pfrl/examples/atari/train_ppo_ale.py)
+                pfrl.policies.SoftmaxCategoricalHead()                
+            ]
         policy = nn.Sequential(*policy_layers)
+
 
         # create value function network   
         vf = torch.nn.Sequential(
@@ -245,9 +265,14 @@ class PfrlPPO():
 
         # orthogonal weight initialisation
         if config.orthogonal_init:
-            for i in [0,2,4]:
+            for i in [0,2]:
                 nn.init.orthogonal_(policy[i].weight, gain=1.0)
                 nn.init.orthogonal_(vf[i].weight, gain=1.0)
+            nn.init.orthogonal_(vf[4].weight, gain=1.0)
+            nn.init.orthogonal_(policy[4].weight, gain=1e-2)
+
+
+            
 
         # bias weight zero initialisation
         if config.zero_init_bias:
