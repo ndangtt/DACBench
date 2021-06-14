@@ -6,45 +6,38 @@ import logging
 import argparse
 import json
 import os
+import sys
+import yaml
+from shutil import copyfile
 
 def run():    
     log_format = '%(asctime)-15s: %(message)s'
     logging.basicConfig(level=logging.DEBUG, format=log_format)   
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--outdir", default='output')
-    parser.add_argument("--cores", default=1, type=int)
-    parser.add_argument("--max_steps", default=10000, type=int)
-    parser.add_argument("--save_interval", default=10000, type=int)
-    parser.add_argument("--eval",default=True, type=int)
-    parser.add_argument("--eval_interval",default=10000, type=int)
-    parser.add_argument("--eval_n_episodes",default=20, type=int)
-    parser.add_argument("--instance_set", default=None)
-    parser.add_argument("--base_config_name", default='lbd_theory')
-    parser.add_argument("--agent_config",default=None)
-    parser.add_argument("--bench_config",default=None)
+    parser.add_argument("--exp_dir", default='ppo-results')
+    parser.add_argument("--config", default='conf.yml')
     args = parser.parse_args()
+
+    with open(args.config, 'rt') as f:
+        conf = yaml.load(f, Loader=yaml.Loader)
+
+    exp_dir = args.exp_dir
+    if not os.path.isdir(exp_dir):
+        os.mkdir(exp_dir)
+    copyfile(args.config, exp_dir + '/config.yml')
     
-    agent_config = pfrl_utils.read_config(args.agent_config) 
-    bench_config = pfrl_utils.read_config(args.bench_config)
-       
-    if bench_config is None:
-        bench_config = {}
-    bench_config['base_config_name'] = args.base_config_name
-    if args.instance_set:
-        bench_config['instance_set_path'] = args.instance_set
-
-
-    ppo = PfrlPPO(pfrl_utils.make_onell_env,                 
-                    config=agent_config,
-                    bench_config=bench_config,
-                    n_parallel=args.cores,
-                    max_steps=args.max_steps,
-                    save_agent_interval = args.save_interval,
-                    evaluate_during_train=args.eval,
-                    eval_interval=args.eval_interval,
-                    eval_n_episodes=args.eval_n_episodes,
-                    outdir=args.outdir
+    exp_conf = conf['exp'] 
+    ppo = PfrlPPO(pfrl_utils.make_env,                 
+                    config=conf['ppo'],
+                    bench_config=conf['bench'],
+                    n_parallel=exp_conf['n_cores'],
+                    max_steps=exp_conf['max_steps'],
+                    save_agent_interval = exp_conf['save_interval'],
+                    evaluate_during_train=True,
+                    eval_interval=exp_conf['eval_interval'],
+                    eval_n_episodes=exp_conf['eval_n_episodes'],
+                    outdir=exp_dir
                     )
     
     ppo.train()

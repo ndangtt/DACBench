@@ -1,13 +1,17 @@
 from gym.spaces.utils import flatten_space
+from dacbench.abstract_benchmark import objdict
 import pfrl
 import functools
 import json
 import os
+import importlib
 from torch import nn
 import torch
 import numpy as np
 from dacbench.benchmarks.onell_benchmark import OneLLBenchmark
 import gym
+import yaml
+from copy import deepcopy
 
 def flatten_env(self, env):
         # flatten observation space to Box so that it's supported by pfrl        
@@ -16,19 +20,6 @@ def flatten_env(self, env):
         # convert environment to float32 (required by pfrl)
         env = pfrl.wrappers.CastObservationToFloat32(env)
         return env
-
-
-def make_batch_env(make_env_func, n_envs=1, 
-                    seeds=None, test_env=False, 
-                    wrappers=[
-                        {'function':pfrl.wrappers.CastObservationToFloat32,'args':{}}
-                        ],
-                    bench_config=None):
-    if seeds is None:
-        seeds = np.arange(n_envs)
-    return pfrl.envs.MultiprocessVectorEnv(
-        [functools.partial(make_env_func, seed, test_env, wrappers, bench_config) for seed in seeds]
-    )
 
     
 def make_mlp(indim, outdim, n_hidden_layers, n_hidden_nodes, activation='Tanh', orthogonal_init=True):
@@ -88,16 +79,42 @@ class TrainEnvWrapper(gym.Wrapper):
             #print("(training) " + info['msg'])
         return state, reward, done, info
     
-def make_onell_env(seed, test, wrappers=[], bench_config=None):
+def make_batch_env(make_env_func, n_envs=1, 
+                    seeds=None, test_env=False, 
+                    wrappers=[
+                        {'function':pfrl.wrappers.CastObservationToFloat32,'args':{}}
+                        ],
+                    bench_config=None):
+    if seeds is None:
+        seeds = np.arange(n_envs)
+    return pfrl.envs.MultiprocessVectorEnv(
+        [functools.partial(make_env_func, seed, test_env, bench_config, wrappers) for seed in seeds]
+    )
+
+def make_env(seed, test, bench_config, wrappers=[]):
+    module_name = '.'.join(bench_config['name'].split('.')[:-1])
+    class_name = bench_config['name'].split('.')[-1]
+    bench_class = getattr(importlib.import_module(module_name), class_name)
+
+    config = objdict(deepcopy(bench_config))
+    del config.name
+    del config.base_config_name
+
+    # convert list to numpy array
+    for k in config.keys():
+        if type(config[k]) == list:
+            if type(config[k][0]) == list:
+                map(np.array, config[k])
+            config[k] = np.array(config[k])
+
     # use a different seed if this is a test environment
     if test:
         seed = 2 ** 32 - 1 - seed    
-    if bench_config:
-        bench = OneLLBenchmark(config=bench_config)
-    else:
-        bench = OneLLBenchmark()
+    
+    bench = bench_class(bench_config['base_config_name'], config)
     bench.config.seed = seed
     env = bench.get_environment()
+    
     for wrapper in wrappers:
         env = wrapper['function'](env, **wrapper['args'])
     if test:

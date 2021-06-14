@@ -207,7 +207,10 @@ class PfrlPPO():
         # info to create networks
         activation = getattr(nn, config.activation) 
         n_hiddens = config.n_hidden_nodes   
-        act_size = act_space.low.size
+        if isinstance(act_space, gym.spaces.Box):
+            act_size = act_space.low.size
+        else:
+            act_size = act_space.n
 
         # create policy network
         policy_layers = [

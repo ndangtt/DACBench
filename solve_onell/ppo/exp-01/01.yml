@@ -1,0 +1,52 @@
+exp:
+    n_cores:                        3 
+    max_steps:                      1000000
+    save_interval:                  1000000
+    eval_interval:                  2000
+    eval_n_episodes:                20
+
+bench:
+    name:                           'dacbench.benchmarks.onell_benchmark.OneLLBenchmark'
+    base_config_name:               'lbd_theory'
+    instance_set_path:              'onemax_500'
+    reward_choice:                  'minus_evals_normalised'
+    init_solution_ratio:            0.95
+    action_space_class:             'Discrete'
+    action_space_args:              [8]
+    action_choices:                 {"lbd": [1, 5, 10, 15, 20, 30, 40, 60]}
+    observation_description:        'n, f(x)'
+    observation_space_args:         [[1, 0], [Infinity, Infinity]]
+
+
+ppo:
+    normalise_obs:                  False
+    obs_clip_threshold:             
+    reward_scale_factor:            1.0
+    
+    n_hidden_nodes:                 50
+    activation:                     'ReLU'
+    bound_mean:                     False # continuous action only
+    var_init:                       # continous action only
+    orthogonal_init:                False
+    zero_init_bias:                 False
+
+    lr:                             0.0003
+    lr_linear_decay:                True
+
+    update_interval:                1000
+    batchsize:                      1000
+    n_epochs:                       20
+    vf_coef:                        1.0
+    entropy_coef:                   0.01
+    clip_eps:                       0.2
+    clip_eps_vf:                    
+    clip_eps_linear_decay:          False
+    standadize_advantages:          False
+
+    gamma:                          0.99
+    lambda:                         0.95
+
+    value_stats_window:             1000
+    entropy_stats_window:           1000
+    value_loss_stats_window:        256
+    policy_loss_stats_window:       256
