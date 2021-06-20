@@ -528,7 +528,18 @@ class OneLLEnv(AbstractEnv):
             msg += "Episode done: ep=%d; n=%d; obj=%d; init_obj=%d; evals=%d; max_evals=%d; steps=%d; lbd_min=%.1f; lbd_max=%.1f; lbd_mean=%.1f; R=%.4f" % (self.n_eps, self.n, self.x.fitness, self.init_obj, self.total_evals, self.max_evals, self.c_step, min(self.lbds), max(self.lbds), sum(self.lbds)/len(self.lbds), sum(self.rewards))      
             self.logger.info(msg) 
             returned_info['msg'] = msg
-            returned_info['values'] = {'n':self.n, 'obj': self.x.fitness, 'init_obj': self.init_obj, 'evals': self.total_evals, 'max_evals': self.max_evals, 'steps': self.c_step, 'lbd_min': min(self.lbds), 'lbd_max': max(self.lbds), 'lbd_mean': sum(self.lbds)/len(self.lbds), 'R': sum(self.rewards)}
+            returned_info['values'] = {'n':int(self.n), 
+                                        'obj': int(self.x.fitness), 
+                                        'init_obj': int(self.init_obj), 
+                                        'evals': int(self.total_evals), 
+                                        'max_evals': int(self.max_evals), 
+                                        'steps': int(self.c_step), 
+                                        'lbd_min': float(min(self.lbds)), 
+                                        'lbd_max': float(max(self.lbds)), 
+                                        'lbd_mean': float(sum(self.lbds)/len(self.lbds)), 
+                                        'R': float(sum(self.rewards)), 
+                                        'lbds':[float(x) for x in self.lbds], 
+                                        'rewards': [float(x) for x in self.rewards]}
         
         return self.get_state(), reward, done, returned_info
             
