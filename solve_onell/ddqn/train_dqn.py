@@ -170,7 +170,8 @@ class DQN:
         return u
 
     def train(self, episodes: int, max_env_time_steps: int, epsilon: float, eval_eps: int = 1,
-              eval_every_n_steps: int = 1, max_train_time_steps: int = 1_000_000):
+              eval_every_n_steps: int = 1, max_train_time_steps: int = 1_000_000, 
+              begin_learning_after: int = 10_000, batch_size: int = 2_048):
         """
         Training loop
         :param episodes: maximum number of episodes to train for
@@ -451,15 +452,18 @@ if __name__ == "__main__":
                         type=int,
                         help='After how many steps to evaluate')
     parser.add_argument('--env-max-steps',
-                        default=4_500,
+                        default=10**6,
                         type=int,
                         help='Maximal steps in environment before termination.')
     parser.add_argument('--load-model', default=None)
     parser.add_argument('--agent-epsilon', default=0.2, type=float, help='Fixed epsilon to use during training',
                         dest='epsilon')
     parser.add_argument('--direct-control', action='store_true')
-    parser.add_argument('--problem-size', choices=[500, 2000], default=500)
-    parser.add_argument('--problem-init-ratio', type=float, default=0.95)
+    parser.add_argument('--problem-size', type=int, choices=[500, 2000], default=500)
+    parser.add_argument('--problem-init-ratio', type=float, default=0.95, help='if set as -1, start from a random solution')
+    parser.add_argument('--obs', type=str, default="n,f(x),delta f(x),lbd_{t-1},p_{t-1},c_{t-1}", help='observation description string')
+    parser.add_argument('--begin-learning-after', type=int, default=10_000)
+    parser.add_argument('--batch-size', type=int, default=2_048)
 
     # setup output dir
     args = parser.parse_args()
@@ -469,11 +473,13 @@ if __name__ == "__main__":
                                      subfolder_naming_scheme=args.out_dir_suffix)
 
     # create the benchmark
+    if args.problem_init_ratio == -1:
+        args.problem_init_ratio = None
     bench_config = {
         "init_solution_ratio": args.problem_init_ratio,
         "instance_set_path": f"onemax_{args.problem_size}",
         "reward_choice": "minus_evals",  # '"imp_div_evals",  # "imp",
-        "observation_description": "n,f(x),delta f(x),lbd_{t-1},p_{t-1},c_{t-1}",
+        "observation_description": args.obs,
         "seed": args.seed
     }
     benchmark = OneLLBenchmark(config=bench_config)
@@ -504,9 +510,11 @@ if __name__ == "__main__":
         print('#'*80)
         print(f'Using agent type "{agent}" to learn')
         print('#'*80)
-        num_eval_episodes = 10 # use 10 for faster debugging but also set it in the eval method above
+        num_eval_episodes = 20 # use 10 for faster debugging but also set it in the eval method above
         agent.train(episodes, max_env_time_steps, epsilon, num_eval_episodes, args.eval_after_n_steps,
-                    max_train_time_steps=args.training_steps)
+                    max_train_time_steps=args.training_steps,
+                    begin_learning_after=args.begin_learning_after,
+                    batch_size=args.batch_size)
         os.mkdir(os.path.join(out_dir, 'final'))
         agent.save_model(os.path.join(out_dir, 'final'))
         agent.save_rpb(os.path.join(out_dir, 'final'))
